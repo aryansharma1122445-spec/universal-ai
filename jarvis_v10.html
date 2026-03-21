@@ -541,7 +541,7 @@ kbd{background:var(--acc08);border:1px solid rgba(255,255,255,.4);padding:2px 5p
 <div class="grain"></div><div class="vignette"></div>
 <input type="file" id="file-inp" style="display:none" accept="image/*,.pdf,.txt,.js,.py,.html,.css,.json" onchange="handleFile(this)"/>
 
-<!-- SETUP -->
+
 <div id="setup">
   <div class="setup-box">
     <div class="s-logo">JARVIS</div>
@@ -552,12 +552,12 @@ kbd{background:var(--acc08);border:1px solid rgba(255,255,255,.4);padding:2px 5p
     <input type="password" class="s-inp" id="s-groq" placeholder="gsk_..."/>
     <div class="s-lbl">SET ACCESS PASSWORD</div>
     <input type="password" class="s-inp" id="s-pass" placeholder="Choose a strong password..."/>
-    <button class="s-btn" onclick="doSetup()">INITIALIZE JARVIS</button>
+    <button class="s-btn" onclick="">INITIALIZE JARVIS</button>
     <div class="s-note">ALL DATA STORED LOCALLY · NEVER SHARED WITH ANYONE</div>
   </div>
 </div>
 
-<!-- PASSWORD -->
+
 <div id="passscreen">
   <div class="p-bg">JARVIS</div>
   <div class="p-box">
@@ -573,7 +573,7 @@ kbd{background:var(--acc08);border:1px solid rgba(255,255,255,.4);padding:2px 5p
   </div>
 </div>
 
-<!-- DOORS -->
+
 <div id="doors">
   <div class="door door-L"><div class="door-in"><div class="door-grid"></div><div class="door-scan"></div><div class="door-txt">SECURITY<br>CLEARANCE</div></div></div>
   <div class="door door-R"><div class="door-in"><div class="door-grid"></div><div class="door-scan"></div><div class="door-txt">GRANTED<br>WELCOME</div></div></div>
@@ -1321,7 +1321,7 @@ let storedPass=localStorage.getItem('jv8_pass')||'';
 let groqKey=localStorage.getItem('jv8_gkey')||'';
 let uName=localStorage.getItem('jv8_name')||'';
 
-function doSetup(){
+function {
   const nm=document.getElementById('s-name').value.trim();
   const gk=document.getElementById('s-groq').value.trim();
   const pw=document.getElementById('s-pass').value.trim();
@@ -1713,7 +1713,7 @@ function startup(){
   document.getElementById('p-inp').addEventListener('input',()=>{const v=document.getElementById('p-inp').value;document.querySelectorAll('.p-dot').forEach((d,i)=>d.classList.toggle('on',i<v.length));});
   document.getElementById('s-name')?.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('s-groq').focus();});
   document.getElementById('s-groq')?.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('s-pass').focus();});
-  document.getElementById('s-pass')?.addEventListener('keydown',e=>{if(e.key==='Enter')doSetup();});
+  document.getElementById('s-pass')?.addEventListener('keydown',e=>{if(e.key==='Enter');});
   window.addEventListener('resize',()=>{resBg();resNeb();});
   setMood('standby');
   initChatStars();
