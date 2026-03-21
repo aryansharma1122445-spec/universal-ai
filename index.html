@@ -1100,7 +1100,11 @@ document.querySelector('.hi-send').addEventListener('click',()=>{
   }, 200);
 
   // 0.8s → burst → doors FLY open
-  setTimeout(() => {
+  if (sessionStorage.getItem('visited')) {
+    gate.style.display = 'none';
+  } else {
+    sessionStorage.setItem('visited', 'true');
+    setTimeout(() => {
     charge.classList.add('charging');
     setTimeout(() => {
       dL.classList.add('open-L');
