@@ -1,0 +1,15 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/products", "destination": "/products.html" },
+    { "source": "/billing", "destination": "/billing.html" },
+    { "source": "/about", "destination": "/about.html" },
+    { "source": "/jarvis", "destination": "/jarvis.html" },
+    { "source": "/codemachine", "destination": "/codemachine.html" },
+    { "source": "/jarvis-voice", "destination": "/jarvis-voice.html" },
+    { "source": "/merlin", "destination": "/merlin.html" },
+    { "source": "/chat", "destination": "/jarvis_v10.html" }
+  ]
+}

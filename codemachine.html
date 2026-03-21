@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeMachine — UNIVERSAL.AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;min-height:100%;background:#000;color:#fff;font-family:'Cormorant Garamond',serif;overflow-x:hidden;}
+*{cursor:none!important}
+#cur{position:fixed;width:7px;height:7px;background:#fff;border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);mix-blend-mode:difference;}
+#curR{position:fixed;width:26px;height:26px;border:1px solid rgba(255,255,255,.3);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:all .12s ease;}
+#bg-nebula,#bg-stars,#snow-c{position:fixed;inset:0;z-index:0;pointer-events:none;}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.02;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:256px;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;padding:0 40px;height:58px;background:#000;}
+.n-logo{font-family:'Orbitron',monospace;font-size:14px;font-weight:900;letter-spacing:4px;color:#fff;text-decoration:none;text-shadow:0 0 20px rgba(255,255,255,.15);}
+.n-logo span{color:rgba(255,255,255,.45);}
+.n-back{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.5);text-decoration:none;margin-left:32px;transition:color .2s;}
+.n-back:hover{color:#fff;}
+.n-r{margin-left:auto;}
+.n-try{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;color:rgba(255,255,255,.5);background:transparent;border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:7px 18px;text-decoration:none;transition:all .2s;}
+.n-try:hover{color:#fff;border-color:rgba(255,255,255,.4);}
+
+/* HERO - different layout for CodeMachine */
+.hero{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:100px 80px 80px;text-align:center;}
+.h-eyebrow{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:5px;color:rgba(255,255,255,.28);margin-bottom:28px;display:flex;align-items:center;justify-content:center;gap:12px;}
+.h-eyebrow::before,.h-eyebrow::after{content:'';width:24px;height:1px;background:rgba(255,255,255,.15);}
+.h-icon{font-size:60px;margin-bottom:24px;display:block;filter:drop-shadow(0 0 28px rgba(255,255,255,.12));}
+.h-name{font-family:'Orbitron',monospace;font-size:clamp(38px,7vw,78px);font-weight:900;letter-spacing:clamp(4px,2vw,12px);color:#fff;line-height:1;margin-bottom:14px;text-shadow:0 0 70px rgba(255,255,255,.1);}
+.h-tag{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(16px,2vw,21px);color:rgba(255,255,255,.42);letter-spacing:3px;margin-bottom:8px;}
+.h-desc{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.2);margin-bottom:28px;}
+.h-status{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:3px;background:rgba(240,192,48,.06);border:1px solid rgba(240,192,48,.25);color:#f0c030;margin-bottom:40px;}
+.h-sdot{width:5px;height:5px;border-radius:50%;background:#f0c030;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+.h-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+.btn-w{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,.4);background:transparent;border:1px solid rgba(255,255,255,.15);padding:14px 32px;text-decoration:none;transition:all .2s;}
+.btn-w:hover{border-color:rgba(255,255,255,.4);color:#fff;}
+.btn-o{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.45);background:transparent;border:1px solid rgba(255,255,255,.12);padding:13px 28px;text-decoration:none;transition:all .2s;}
+.btn-o:hover{border-color:rgba(255,255,255,.35);color:rgba(255,255,255,.8);}
+
+/* CODE PREVIEW */
+.code-preview{position:relative;z-index:2;padding:0 80px 80px;max-width:900px;margin:0 auto;width:100%;}
+.cp-window{background:rgba(8,8,8,.95);border:1px solid rgba(255,255,255,.08);overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.7);position:relative;}
+.cp-window::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);}
+.cp-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);}
+.cp-dot{width:10px;height:10px;border-radius:50%;}
+.cp-lang{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.3);margin-left:auto;}
+.cp-code{padding:24px 28px;font-family:'Share Tech Mono',monospace;font-size:13px;line-height:1.8;color:rgba(255,255,255,.7);}
+.kw{color:#cc99ff;}.fn{color:#66ccff;}.str{color:#99ffcc;}.cm{color:rgba(255,255,255,.25);font-style:italic;}.num{color:#ffcc66;}
+
+/* SECTIONS */
+.section{position:relative;z-index:2;padding:80px;}
+.section-alt{background:rgba(255,255,255,.015);}
+.s-label{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:5px;color:rgba(255,255,255,.25);margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.s-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.05);}
+.s-title{font-family:'Orbitron',monospace;font-size:clamp(22px,3vw,36px);font-weight:900;letter-spacing:6px;color:#fff;margin-bottom:24px;text-shadow:0 0 30px rgba(255,255,255,.07);}
+.s-text{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;line-height:1.85;color:rgba(255,255,255,.55);max-width:700px;}
+.s-text strong{color:rgba(255,255,255,.9);}
+
+/* LANGS */
+.langs{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px;}
+.lang-pill{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.1);padding:6px 14px;border-radius:4px;background:rgba(255,255,255,.02);transition:all .2s;}
+.lang-pill:hover{border-color:rgba(255,255,255,.3);color:#fff;background:rgba(255,255,255,.05);}
+
+/* FEAT GRID */
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:rgba(255,255,255,.06);margin-top:50px;}
+.fg-card{background:#000;padding:26px 22px;transition:background .2s;position:relative;overflow:hidden;}
+.fg-card:hover{background:#070707;}
+.fg-icon{font-size:20px;margin-bottom:12px;display:block;}
+.fg-t{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:3px;color:#fff;margin-bottom:7px;}
+.fg-d{font-family:'Cormorant Garamond',serif;font-size:14px;color:rgba(255,255,255,.38);line-height:1.6;}
+
+/* CTA */
+.cta{position:relative;z-index:2;padding:100px 80px;text-align:center;border-top:1px solid rgba(255,255,255,.05);}
+.cta-t{font-family:'Orbitron',monospace;font-size:clamp(26px,4vw,48px);font-weight:900;letter-spacing:8px;color:#fff;margin-bottom:14px;text-shadow:0 0 40px rgba(255,255,255,.07);}
+.cta-s{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:rgba(255,255,255,.3);letter-spacing:4px;margin-bottom:32px;}
+.cta-note{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.18);margin-top:16px;}
+
+footer{background:#000;border-top:1px solid rgba(255,255,255,.05);padding:28px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;position:relative;z-index:2;}
+.f-logo{font-family:'Orbitron',monospace;font-size:10px;font-weight:900;letter-spacing:5px;color:rgba(255,255,255,.35);}
+.f-logo span{color:rgba(255,255,255,.18);}
+.f-links{display:flex;gap:20px;}
+.f-links a{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.22);text-decoration:none;transition:color .2s;}
+.f-links a:hover{color:rgba(255,255,255,.6);}
+.f-copy{font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:2px;color:rgba(255,255,255,.12);}
+
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.rd1{transition-delay:.1s}.rd2{transition-delay:.2s}.rd3{transition-delay:.3s}
+@media(max-width:768px){.hero,.section,.cta{padding:80px 28px 40px;}.code-preview{padding:0 28px 60px;}}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="curR"></div>
+<canvas id="bg-nebula"></canvas><canvas id="bg-stars"></canvas><canvas id="snow-c"></canvas>
+<div class="grain"></div>
+
+<nav>
+  <a href="universal_ai.html" class="n-logo">UNIVERSAL<span>.AI</span></a>
+  <a href="products.html" class="n-back">← Products</a>
+  <div class="n-r"><a href="products.html" class="n-try">Notify Me ↗</a></div>
+</nav>
+
+<div class="hero">
+  <div class="h-eyebrow reveal">UNIVERSAL.AI · PRODUCT 02</div>
+  <span class="h-icon reveal">💻</span>
+  <div class="h-name reveal">CODEMACHINE</div>
+  <div class="h-tag reveal">"Built for Those Who Build"</div>
+  <div class="h-desc reveal">SPECIALLY BUILT FOR CODE · ANY LANGUAGE · ANY PROBLEM</div>
+  <div class="h-status reveal"><div class="h-sdot"></div>COMING SOON</div>
+  <div class="h-btns reveal">
+    <a href="#" class="btn-w">NOTIFY ME WHEN LIVE</a>
+    <a href="products.html" class="btn-o">← All Products</a>
+  </div>
+</div>
+
+<!-- CODE PREVIEW -->
+<div class="code-preview reveal">
+  <div class="cp-window">
+    <div class="cp-bar">
+      <div class="cp-dot" style="background:#ff5f57"></div>
+      <div class="cp-dot" style="background:#ffbd2e"></div>
+      <div class="cp-dot" style="background:#28ca41"></div>
+      <div class="cp-lang">PYTHON · CODEMACHINE</div>
+    </div>
+    <div class="cp-code">
+<span class="cm"># CodeMachine — Debug & Optimize</span><br>
+<span class="kw">def</span> <span class="fn">calculate_fibonacci</span>(n):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># Bug: Missing base case handling</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> n &lt;= <span class="num">0</span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> []<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sequence = [<span class="num">0</span>, <span class="num">1</span>]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">while</span> <span class="fn">len</span>(sequence) &lt; n:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sequence.<span class="fn">append</span>(sequence[<span class="num">-1</span>] + sequence[<span class="num">-2</span>])<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> sequence[:n]<br><br>
+<span class="cm"># CodeMachine Response:</span><br>
+<span class="cm"># ✓ Fixed edge case for n=1</span><br>
+<span class="cm"># ✓ Optimized with memoization</span><br>
+<span class="cm"># ✓ Added type hints</span><br>
+<span class="cm"># ✓ 3x performance improvement</span>
+    </div>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="s-label">ABOUT CODEMACHINE</div>
+  <div class="s-title">One Tool. Every Language.</div>
+  <p class="s-text"><strong>CodeMachine</strong> is a dedicated AI built exclusively for developers. While JARVIS does everything, CodeMachine does <em>one thing</em> — code — and does it better than anything else. Trained and optimized specifically for programming, it understands your codebase, fixes bugs, explains logic, and helps you build faster.<br><br>Not a general AI. A <strong>specialist</strong>.</p>
+  <div class="langs">
+    <div class="lang-pill">Python</div><div class="lang-pill">JavaScript</div><div class="lang-pill">TypeScript</div><div class="lang-pill">Rust</div><div class="lang-pill">Go</div><div class="lang-pill">C++</div><div class="lang-pill">Java</div><div class="lang-pill">Swift</div><div class="lang-pill">Kotlin</div><div class="lang-pill">Ruby</div><div class="lang-pill">PHP</div><div class="lang-pill">SQL</div><div class="lang-pill">HTML/CSS</div><div class="lang-pill">React</div><div class="lang-pill">Vue</div><div class="lang-pill">+ 35 more</div>
+  </div>
+</div>
+
+<div class="section section-alt">
+  <div class="s-label reveal">FEATURES</div>
+  <div class="s-title reveal">Built Different.</div>
+  <div class="feat-grid">
+    <div class="fg-card reveal"><span class="fg-icon">🐛</span><div class="fg-t">DEBUG & FIX</div><div class="fg-d">Finds bugs you missed. Explains what went wrong. Fixes it instantly.</div></div>
+    <div class="fg-card reveal rd1"><span class="fg-icon">⚡</span><div class="fg-t">OPTIMIZE</div><div class="fg-d">Analyses performance bottlenecks and rewrites for maximum speed.</div></div>
+    <div class="fg-card reveal rd2"><span class="fg-icon">📖</span><div class="fg-t">EXPLAIN CODE</div><div class="fg-d">Breaks down complex logic into plain language anyone can understand.</div></div>
+    <div class="fg-card reveal rd3"><span class="fg-icon">🏗️</span><div class="fg-t">ARCHITECTURE</div><div class="fg-d">Designs scalable system architecture for any project size.</div></div>
+    <div class="fg-card reveal"><span class="fg-icon">🧪</span><div class="fg-t">TEST GENERATION</div><div class="fg-d">Auto-generates comprehensive test suites for your codebase.</div></div>
+    <div class="fg-card reveal rd1"><span class="fg-icon">📄</span><div class="fg-t">DOCUMENTATION</div><div class="fg-d">Writes clean, professional documentation from your code automatically.</div></div>
+  </div>
+</div>
+
+<div class="cta">
+  <div class="cta-t reveal">Coming Soon.</div>
+  <div class="cta-s reveal">The developer's unfair advantage is almost ready.</div>
+  <a href="products.html" class="btn-o reveal">← Back to Products</a>
+  <div class="cta-note reveal">BE NOTIFIED WHEN CODEMACHINE LAUNCHES</div>
+</div>
+
+<footer>
+  <div class="f-logo">UNIVERSAL<span>.AI</span></div>
+  <div class="f-links"><a href="universal_ai.html">Home</a><a href="products.html">Products</a><a href="about.html">About</a></div>
+  <div class="f-copy">© 2026 UNIVERSAL.AI</div>
+</footer>
+
+<script>
+const cur=document.getElementById('cur'),curR=document.getElementById('curR');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function aC(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(aC);})();
+const nebC=document.getElementById('bg-nebula'),nebX=nebC.getContext('2d');
+function resNeb(){nebC.width=window.innerWidth;nebC.height=window.innerHeight;nebX.clearRect(0,0,nebC.width,nebC.height);[{x:.2,y:.3,r:nebC.width*.32,c:'rgba(40,50,80,.06)'},{x:.8,y:.65,r:nebC.width*.28,c:'rgba(30,20,60,.05)'}].forEach(b=>{const g=nebX.createRadialGradient(b.x*nebC.width,b.y*nebC.height,0,b.x*nebC.width,b.y*nebC.height,b.r);g.addColorStop(0,b.c);g.addColorStop(1,'transparent');nebX.fillStyle=g;nebX.fillRect(0,0,nebC.width,nebC.height);});}
+resNeb();window.addEventListener('resize',resNeb);
+const bgC=document.getElementById('bg-stars'),bgX=bgC.getContext('2d');
+let BW,BH;
+function resBg(){BW=bgC.width=window.innerWidth;BH=bgC.height=window.innerHeight;}
+resBg();window.addEventListener('resize',resBg);
+const STARS=Array.from({length:280},()=>({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,s:Math.random()*.75+.1,op:Math.random()*.22+.04,tw:Math.random()*Math.PI*2,tws:Math.random()*.012+.004}));
+class SS{constructor(){this.rst(true);}rst(i=false){this.x=Math.random()*BW;this.y=i?Math.random()*BH:-10;this.len=Math.random()*110+40;this.speed=Math.random()*6+2;this.ang=Math.PI/4+Math.random()*.5;this.op=Math.random()*.5+.2;this.d=Math.random()*900;this.t=0;this.on=Math.random()<.2;}upd(){if(!this.on){this.t++;if(this.t>this.d){this.on=true;this.t=0;}return;}this.x+=Math.cos(this.ang)*this.speed;this.y+=Math.sin(this.ang)*this.speed;if(this.x>BW+200||this.y>BH+200)this.rst();}draw(c){if(!this.on)return;c.save();c.globalAlpha=this.op;const g=c.createLinearGradient(this.x,this.y,this.x-Math.cos(this.ang)*this.len,this.y-Math.sin(this.ang)*this.len);g.addColorStop(0,'rgba(255,255,255,.9)');g.addColorStop(1,'rgba(255,255,255,0)');c.strokeStyle=g;c.lineWidth=.8;c.beginPath();c.moveTo(this.x,this.y);c.lineTo(this.x-Math.cos(this.ang)*this.len,this.y-Math.sin(this.ang)*this.len);c.stroke();c.restore();}}
+const SH=Array.from({length:7},()=>new SS());let fr=0;
+(function aBg(){bgX.clearRect(0,0,BW,BH);fr++;STARS.forEach(p=>{p.tw+=p.tws;bgX.beginPath();bgX.arc(p.x,p.y,p.s,0,Math.PI*2);bgX.fillStyle=`rgba(255,255,255,${p.op*(0.5+0.5*Math.sin(p.tw))})`;bgX.fill();});if(fr%3===0)SH.forEach(s=>{s.upd();s.draw(bgX);});requestAnimationFrame(aBg);})();
+const snowC=document.getElementById('snow-c'),snowX=snowC.getContext('2d');
+let SW,sH;
+function resS(){SW=snowC.width=window.innerWidth;sH=snowC.height=window.innerHeight;}
+resS();window.addEventListener('resize',resS);
+const SNOW=Array.from({length:110},()=>({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,r:Math.random()*1.7+.3,op:Math.random()*.28+.05,sp:Math.random()*.4+.08,dr:Math.random()*.5-.25,tw:Math.random()*Math.PI*2,tws:Math.random()*.008+.002,wx:0}));
+(function aSn(){snowX.clearRect(0,0,SW,sH);SNOW.forEach(p=>{p.y+=p.sp;p.x+=p.dr+p.wx;p.tw+=p.tws;p.wx=Math.sin(p.tw)*.28;if(p.y>sH+5){p.y=-5;p.x=Math.random()*SW;}if(p.x<-5)p.x=SW+5;if(p.x>SW+5)p.x=-5;snowX.beginPath();snowX.arc(p.x,p.y,p.r,0,Math.PI*2);snowX.fillStyle=`rgba(255,255,255,${p.op*(0.6+0.4*Math.sin(p.tw))})`;snowX.fill();});requestAnimationFrame(aSn);})();
+const rv=document.querySelectorAll('.reveal');
+const ob=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+rv.forEach(el=>ob.observe(el));
+</script>
+</body>
+</html>

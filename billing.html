@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Billing & Plans — UNIVERSAL.AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;min-height:100%;background:#000;color:#fff;font-family:'Cormorant Garamond',serif;overflow-x:hidden;}
+*{cursor:none!important}
+#cur{position:fixed;width:7px;height:7px;background:#fff;border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);mix-blend-mode:difference;}
+#curR{position:fixed;width:26px;height:26px;border:1px solid rgba(255,255,255,.3);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:all .12s ease;}
+#bg-nebula,#bg-stars,#snow-c{position:fixed;inset:0;z-index:0;pointer-events:none;}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.02;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:256px;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;padding:0 40px;height:58px;background:#000;border-bottom:1px solid rgba(255,255,255,.05);}
+.n-logo{font-family:'Orbitron',monospace;font-size:14px;font-weight:900;letter-spacing:4px;color:#fff;text-decoration:none;text-shadow:0 0 20px rgba(255,255,255,.15);}
+.n-logo span{color:rgba(255,255,255,.45);}
+.n-links{display:flex;align-items:center;gap:4px;margin-left:40px;flex:1;}
+.n-link{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;color:rgba(255,255,255,.7);text-decoration:none;padding:6px 14px;border-radius:6px;transition:all .2s;}
+.n-link:hover{color:#fff;}.n-link.act{color:#fff;}
+.n-r{display:flex;gap:10px;flex-shrink:0;}
+.n-try{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;color:#000;background:#fff;border:none;border-radius:999px;padding:7px 18px;text-decoration:none;transition:all .2s;}
+.n-try:hover{background:rgba(255,255,255,.88);}
+
+/* PAGE */
+.page{position:relative;z-index:2;padding:100px 40px 80px;}
+
+/* HERO */
+.bill-hero{text-align:center;margin-bottom:60px;}
+.bh-eyebrow{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:6px;color:rgba(255,255,255,.28);margin-bottom:18px;display:flex;align-items:center;justify-content:center;gap:12px;}
+.bh-eyebrow::before,.bh-eyebrow::after{content:'';width:28px;height:1px;background:rgba(255,255,255,.15);}
+.bh-title{font-family:'Orbitron',monospace;font-size:clamp(30px,5vw,54px);font-weight:900;letter-spacing:8px;color:#fff;margin-bottom:14px;text-shadow:0 0 60px rgba(255,255,255,.08);}
+.bh-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(15px,2vw,19px);color:rgba(255,255,255,.38);letter-spacing:4px;margin-bottom:36px;}
+.bh-note{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.2);}
+.bh-note span{color:#f0c030;}
+
+/* TOGGLE */
+.toggle-wrap{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:56px;}
+.tog-lbl{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.5);transition:color .2s;}
+.tog-lbl.act{color:#fff;}
+.toggle{width:50px;height:26px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:999px;position:relative;transition:all .3s;}
+.toggle.on{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.4);}
+.toggle-ball{position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .3s;box-shadow:0 2px 8px rgba(0,0,0,.4);}
+.toggle.on .toggle-ball{transform:translateX(24px);}
+.save-badge{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:#39d98a;background:rgba(57,217,138,.08);border:1px solid rgba(57,217,138,.2);border-radius:999px;padding:3px 10px;}
+
+/* PLANS GRID */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.06);max-width:1100px;margin:0 auto 80px;}
+
+.plan{background:#000;padding:38px 32px;position:relative;display:flex;flex-direction:column;transition:background .25s;}
+.plan:hover{background:#060606;}
+.plan.pop{background:#080808;}
+.plan.pop:hover{background:#0d0d0d;}
+
+/* Popular badge */
+.pop-badge{position:absolute;top:-1px;left:50%;transform:translateX(-50%);font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:3px;color:#000;background:#fff;padding:4px 16px;white-space:nowrap;}
+
+/* Top glow line */
+.plan::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:rgba(255,255,255,.06);}
+.plan.pop::before{background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);}
+
+.plan-name{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:5px;color:rgba(255,255,255,.4);margin-bottom:24px;}
+.plan.pop .plan-name{color:rgba(255,255,255,.7);}
+
+/* Price */
+.plan-price{display:flex;align-items:flex-end;gap:6px;margin-bottom:6px;}
+.price-amt{font-family:'Orbitron',monospace;font-size:52px;font-weight:900;color:#fff;line-height:1;letter-spacing:-2px;}
+.price-free{font-family:'Orbitron',monospace;font-size:36px;font-weight:900;color:#fff;line-height:1;}
+.price-per{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:rgba(255,255,255,.3);padding-bottom:8px;}
+.price-cycle{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.2);margin-bottom:28px;}
+.price-cycle span{color:rgba(255,255,255,.5);}
+
+/* Divider */
+.plan-div{height:1px;background:rgba(255,255,255,.06);margin-bottom:24px;}
+
+/* Msgs highlight */
+.plan-msgs{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding:12px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);}
+.pm-num{font-family:'Orbitron',monospace;font-size:22px;font-weight:900;color:#fff;letter-spacing:1px;}
+.pm-lbl{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.35);line-height:1.4;}
+
+/* Features */
+.plan-feats{flex:1;display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
+.pf{display:flex;align-items:flex-start;gap:10px;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;color:rgba(255,255,255,.6);line-height:1.5;}
+.pf-icon{flex-shrink:0;font-size:10px;margin-top:1px;}
+.pf-icon.yes{color:rgba(255,255,255,.7);}
+.pf-icon.no{color:rgba(255,255,255,.18);}
+.pf.dim{color:rgba(255,255,255,.2);}
+
+/* CTA btn */
+.plan-btn{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:3px;padding:13px;text-align:center;transition:all .25s;text-decoration:none;display:block;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);background:transparent;}
+.plan-btn:hover{border-color:rgba(255,255,255,.4);color:#fff;}
+.plan-btn.solid{background:#fff;color:#000;border-color:#fff;}
+.plan-btn.solid:hover{background:rgba(255,255,255,.88);box-shadow:0 0 30px rgba(255,255,255,.12);}
+
+/* COMPARISON TABLE */
+.comp-section{max-width:1100px;margin:0 auto 80px;}
+.comp-title{font-family:'Orbitron',monospace;font-size:clamp(18px,3vw,28px);font-weight:900;letter-spacing:6px;color:#fff;margin-bottom:40px;text-align:center;}
+.comp-table{width:100%;border-collapse:collapse;}
+.comp-table th{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;color:rgba(255,255,255,.45);padding:14px 20px;text-align:center;border-bottom:1px solid rgba(255,255,255,.07);}
+.comp-table th:first-child{text-align:left;color:rgba(255,255,255,.3);}
+.comp-table td{padding:13px 20px;border-bottom:1px solid rgba(255,255,255,.04);font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:rgba(255,255,255,.55);text-align:center;transition:background .15s;}
+.comp-table tr:hover td{background:rgba(255,255,255,.02);}
+.comp-table td:first-child{text-align:left;color:rgba(255,255,255,.4);}
+.comp-table .cat-row td{font-family:'Orbitron',monospace;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.25);padding:18px 20px 6px;background:transparent;}
+.comp-table .cat-row td:first-child{color:rgba(255,255,255,.25);}
+.check{color:rgba(255,255,255,.85);font-size:13px;}
+.cross{color:rgba(255,255,255,.18);font-size:13px;}
+.comp-hl{color:#fff;font-weight:700;}
+
+/* FAQ */
+.faq-section{max-width:780px;margin:0 auto 80px;}
+.faq-title{font-family:'Orbitron',monospace;font-size:clamp(18px,3vw,28px);font-weight:900;letter-spacing:6px;color:#fff;margin-bottom:40px;text-align:center;}
+.faq-item{border-bottom:1px solid rgba(255,255,255,.06);}
+.faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;padding:20px 0;background:transparent;border:none;text-align:left;transition:all .2s;}
+.faq-q:hover .faq-qt{color:#fff;}
+.faq-qt{font-family:'Cormorant Garamond',serif;font-size:18px;color:rgba(255,255,255,.75);line-height:1.4;transition:color .2s;}
+.faq-arrow{font-size:14px;color:rgba(255,255,255,.3);transition:transform .3s;flex-shrink:0;margin-left:16px;}
+.faq-item.open .faq-arrow{transform:rotate(180deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.16,1,.3,1);}
+.faq-item.open .faq-a{max-height:200px;}
+.faq-at{font-family:'Cormorant Garamond',serif;font-size:16px;color:rgba(255,255,255,.45);line-height:1.75;padding-bottom:20px;}
+.faq-at strong{color:rgba(255,255,255,.75);}
+
+/* BOTTOM CTA */
+.bcta{text-align:center;padding:80px 40px;border-top:1px solid rgba(255,255,255,.05);}
+.bcta-t{font-family:'Orbitron',monospace;font-size:clamp(24px,4vw,44px);font-weight:900;letter-spacing:8px;color:#fff;margin-bottom:12px;text-shadow:0 0 40px rgba(255,255,255,.07);}
+.bcta-s{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:rgba(255,255,255,.32);letter-spacing:4px;margin-bottom:32px;}
+.bcta-note{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.18);margin-top:16px;}
+.btn-w{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:4px;color:#000;background:#fff;border:none;padding:15px 36px;text-decoration:none;transition:all .2s;display:inline-block;}
+.btn-w:hover{background:rgba(255,255,255,.88);box-shadow:0 0 40px rgba(255,255,255,.15);transform:translateY(-1px);}
+
+/* FOOTER */
+footer{background:#000;border-top:1px solid rgba(255,255,255,.05);padding:28px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;position:relative;z-index:2;}
+.f-logo{font-family:'Orbitron',monospace;font-size:10px;font-weight:900;letter-spacing:5px;color:rgba(255,255,255,.35);}
+.f-logo span{color:rgba(255,255,255,.18);}
+.f-links{display:flex;gap:20px;}
+.f-links a{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.22);text-decoration:none;transition:color .2s;}
+.f-links a:hover{color:rgba(255,255,255,.6);}
+.f-copy{font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:2px;color:rgba(255,255,255,.12);}
+
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.rd1{transition-delay:.1s}.rd2{transition-delay:.2s}.rd3{transition-delay:.3s}
+@media(max-width:900px){.plans{grid-template-columns:1fr;}.comp-table{display:none;}}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="curR"></div>
+<canvas id="bg-nebula"></canvas><canvas id="bg-stars"></canvas><canvas id="snow-c"></canvas>
+<div class="grain"></div>
+
+<nav>
+  <a href="universal_ai.html" class="n-logo">UNIVERSAL<span>.AI</span></a>
+  <div class="n-links">
+    <a href="products.html" class="n-link">Products</a>
+    <a href="billing.html" class="n-link act">Billing</a>
+    <a href="about.html" class="n-link">About Us</a>
+  </div>
+  <div class="n-r"><a href="jarvis_v10.html" class="n-try">Try JARVIS ↗</a></div>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="bill-hero reveal">
+    <div class="bh-eyebrow">PLANS & PRICING</div>
+    <div class="bh-title">Simple Pricing.<br>Serious Power.</div>
+    <div class="bh-sub">Start free. Upgrade when you're ready.</div>
+    <div class="bh-note">⚡ <span>Limited launch pricing</span> — prices will increase after full release</div>
+  </div>
+
+  <!-- TOGGLE -->
+  <div class="toggle-wrap reveal">
+    <div class="tog-lbl act" id="lbl-mo">MONTHLY</div>
+    <div class="toggle" id="tog" onclick="toggleBilling()"><div class="toggle-ball"></div></div>
+    <div class="tog-lbl" id="lbl-yr">ANNUAL</div>
+    <div class="save-badge" id="save-badge" style="opacity:.4">SAVE UP TO 9%</div>
+  </div>
+
+  <!-- PLANS -->
+  <div class="plans reveal">
+
+    <!-- STARTER -->
+    <div class="plan">
+      <div class="plan-name">STARTER</div>
+      <div class="plan-price"><div class="price-free">FREE</div></div>
+      <div class="price-cycle"><span>Forever free</span> · No card required</div>
+      <div class="plan-div"></div>
+      <div class="plan-msgs">
+        <div class="pm-num">50</div>
+        <div class="pm-lbl">MESSAGES<br>PER DAY</div>
+      </div>
+      <div class="plan-feats">
+        <div class="pf"><span class="pf-icon yes">✓</span>JARVIS Chat access</div>
+        <div class="pf"><span class="pf-icon yes">✓</span>Basic web search</div>
+        <div class="pf"><span class="pf-icon yes">✓</span>5 saved chats</div>
+        <div class="pf"><span class="pf-icon yes">✓</span>Calculator & weather</div>
+        <div class="pf"><span class="pf-icon yes">✓</span>2 themes</div>
+        <div class="pf dim"><span class="pf-icon no">—</span>Voice input</div>
+        <div class="pf dim"><span class="pf-icon no">—</span>Deep search</div>
+        <div class="pf dim"><span class="pf-icon no">—</span>Model switching</div>
+        <div class="pf dim"><span class="pf-icon no">—</span>API access</div>
+        <div class="pf dim"><span class="pf-icon no">—</span>Priority support</div>
+      </div>
+      <a href="jarvis_v10.html" class="plan-btn">START FREE →</a>
+    </div>
+
+    <!-- PRO -->
+    <div class="plan pop">
+      <div class="pop-badge">MOST POPULAR</div>
+      <div class="plan-name">PRO</div>
+      <div class="plan-price">
+        <div class="price-amt" id="pro-price">$15</div>
+        <div class="price-per">/mo</div>
+      </div>
+      <div class="price-cycle" id="pro-cycle">Billed monthly · <span>29-day billing cycle</span></div>
+      <div class="plan-div"></div>
+      <div class="plan-msgs" style="border-color:rgba(255,255,255,.14);">
+        <div class="pm-num">150</div>
+        <div class="pm-lbl">MESSAGES<br>PER DAY</div>
+      </div>
+      <div class="plan-feats">
+        <div class="pf"><span class="pf-icon yes">✓</span>Everything in Starter</div>
+        <div class="pf"><span class="pf-icon yes">✓</span>Voice input</div>
+        <div class="pf"><span class="pf-icon yes">✓</span>Deep search</div>
+        <div class="pf"><span class="pf-icon yes">✓</span>Unlimited saved chats</div>
+        <div class="pf"><span class="pf-icon yes">✓</span>All 5 themes</div>
+        <div class="pf"><span class="pf-icon yes">✓</span>Model switching</div>
+        <div class="pf"><span class="pf-icon yes">✓</span>Notes & export</div>
+        <div class="pf"><span class="pf-icon yes">✓</span>Email support</div>
+        <div class="pf dim"><span class="pf-icon no">—</span>API access</div>
+        <div class="pf dim"><span class="pf-icon no">—</span>Priority support</div>
+      </div>
+      <a href="#" class="plan-btn solid" onclick="showComingSoon()">GET PRO →</a>
+    </div>
+
+    <!-- ULTRA -->
+    <div class="plan">
+      <div class="plan-name">ULTRA</div>
+      <div class="plan-price">
+        <div class="price-amt" id="ultra-price">$35</div>
+        <div class="price-per">/mo</div>
+      </div>
+      <div class="price-cycle" id="ultra-cycle">Billed monthly · <span>29-day billing cycle</span></div>
+      <div class="plan-div"></div>
+      <div class="plan-msgs">
+        <div class="pm-num">175</div>
+        <div class="pm-lbl">MESSAGES<br>PER DAY</div>
+      </div>
+      <div class="plan-feats">
+        <div class="pf"><span class="pf-icon yes">✓</span>Everything in Pro</div>
+        <div class="pf"><span class="pf-icon yes">✓</span>Full API access</div>
+        <div class="pf"><span class="pf-icon yes">✓</span>Custom model support</div>
+        <div class="pf"><span class="pf-icon yes">✓</span>Priority support 24/7</div>
+        <div class="pf"><span class="pf-icon yes">✓</span>Team access (3 seats)</div>
+        <div class="pf"><span class="pf-icon yes">✓</span>Usage analytics</div>
+        <div class="pf"><span class="pf-icon yes">✓</span>Early access features</div>
+        <div class="pf"><span class="pf-icon yes">✓</span>SLA guarantee</div>
+        <div class="pf"><span class="pf-icon yes">✓</span>Custom integrations</div>
+        <div class="pf"><span class="pf-icon yes">✓</span>Dedicated manager</div>
+      </div>
+      <a href="#" class="plan-btn" onclick="showComingSoon()">GET ULTRA →</a>
+    </div>
+
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div class="comp-section reveal">
+    <div class="comp-title">Full Comparison</div>
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th style="text-align:left;width:40%">FEATURE</th>
+          <th>STARTER</th>
+          <th style="color:#fff;">PRO</th>
+          <th>ULTRA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="cat-row"><td colspan="4">USAGE</td></tr>
+        <tr><td>Messages per day</td><td>50</td><td class="comp-hl">150</td><td>175</td></tr>
+        <tr><td>Billing cycle</td><td>—</td><td>29 days</td><td>29 days</td></tr>
+        <tr><td>Saved chats</td><td>5</td><td class="comp-hl">Unlimited</td><td>Unlimited</td></tr>
+
+        <tr class="cat-row"><td colspan="4">FEATURES</td></tr>
+        <tr><td>JARVIS Chat</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>Web Search</td><td>Basic</td><td class="comp-hl">Full</td><td>Full</td></tr>
+        <tr><td>Deep Search</td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>Voice Input</td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>Model Switching</td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>Themes</td><td>2</td><td class="comp-hl">All 5</td><td>All 5</td></tr>
+        <tr><td>Notes & Export</td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+
+        <tr class="cat-row"><td colspan="4">ADVANCED</td></tr>
+        <tr><td>API Access</td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>Custom Model Support</td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>Team Seats</td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td>3 seats</td></tr>
+        <tr><td>Analytics Dashboard</td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="check">✓</span></td></tr>
+
+        <tr class="cat-row"><td colspan="4">SUPPORT</td></tr>
+        <tr><td>Support Type</td><td>Community</td><td class="comp-hl">Email</td><td>Priority 24/7</td></tr>
+        <tr><td>SLA Guarantee</td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="check">✓</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section reveal">
+    <div class="faq-title">Questions? Answered.</div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFAQ(this)">
+        <span class="faq-qt">Can I cancel anytime?</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a"><p class="faq-at">Yes. Cancel anytime from your account dashboard. No questions asked, no cancellation fees. Your plan continues until the end of the current billing cycle.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFAQ(this)">
+        <span class="faq-qt">What happens when I hit my daily message limit?</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a"><p class="faq-at">Your limit resets every day at midnight. On the Starter plan, you get <strong>50 messages</strong> daily. Pro gives you <strong>150</strong>, and Ultra gives you <strong>175</strong>. Upgrade anytime to increase your limit.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFAQ(this)">
+        <span class="faq-qt">Is there a free trial for paid plans?</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a"><p class="faq-at">The Starter plan is <strong>free forever</strong> — no trial, no expiry. Paid plans will include a <strong>7-day money-back guarantee</strong> once payment is enabled. If you're not satisfied, we refund you. No risk.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFAQ(this)">
+        <span class="faq-qt">What is the billing cycle?</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a"><p class="faq-at">All paid plans operate on a <strong>29-day billing cycle</strong> for monthly plans. Annual plans are billed once per year at a discounted rate. Full details are visible in your account dashboard after subscribing.</p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFAQ(this)">
+        <span class="faq-qt">When will payments go live?</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a"><p class="faq-at">UNIVERSAL.AI is currently in <strong>Phase 1</strong>. Paid plans will activate when our full infrastructure is ready. Until then, all features are available on the Starter plan. <strong>Early users will receive special pricing.</strong></p></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFAQ(this)">
+        <span class="faq-qt">Will prices change after launch?</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a"><p class="faq-at">Yes. Current pricing is <strong>launch pricing</strong> — it will increase once we exit Phase 1. Users who subscribe early will be <strong>locked in at their current rate</strong> for as long as they remain subscribed.</p></div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM CTA -->
+  <div class="bcta reveal">
+    <div class="bcta-t">Start Free Today.</div>
+    <div class="bcta-s">No credit card. No commitment. Just intelligence.</div>
+    <a href="jarvis_v10.html" class="btn-w">TRY JARVIS FREE →</a>
+    <div class="bcta-note">50 FREE MESSAGES DAILY · FOREVER · NO CARD REQUIRED</div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="f-logo">UNIVERSAL<span>.AI</span></div>
+  <div class="f-links">
+    <a href="universal_ai.html">Home</a>
+    <a href="products.html">Products</a>
+    <a href="billing.html">Billing</a>
+    <a href="about.html">About</a>
+  </div>
+  <div class="f-copy">© 2026 UNIVERSAL.AI · ALL RIGHTS RESERVED</div>
+</footer>
+
+<!-- COMING SOON TOAST -->
+<div id="cs-toast" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(8,8,8,.97);border:1px solid rgba(255,255,255,.2);padding:12px 28px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;color:rgba(255,255,255,.85);z-index:9999;display:none;border-radius:2px;white-space:nowrap;">
+  ⚡ PAYMENTS COMING SOON — YOU'LL BE NOTIFIED
+</div>
+
+<script>
+// CURSOR
+const cur=document.getElementById('cur'),curR=document.getElementById('curR');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function aC(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(aC);})();
+
+// BG
+const nebC=document.getElementById('bg-nebula'),nebX=nebC.getContext('2d');
+function resNeb(){nebC.width=window.innerWidth;nebC.height=window.innerHeight;nebX.clearRect(0,0,nebC.width,nebC.height);[{x:.1,y:.2,r:nebC.width*.32,c:'rgba(50,50,90,.06)'},{x:.9,y:.7,r:nebC.width*.3,c:'rgba(40,25,65,.05)'},{x:.5,y:.5,r:nebC.width*.22,c:'rgba(25,40,60,.04)'}].forEach(b=>{const g=nebX.createRadialGradient(b.x*nebC.width,b.y*nebC.height,0,b.x*nebC.width,b.y*nebC.height,b.r);g.addColorStop(0,b.c);g.addColorStop(1,'transparent');nebX.fillStyle=g;nebX.fillRect(0,0,nebC.width,nebC.height);});}
+resNeb();window.addEventListener('resize',resNeb);
+const bgC=document.getElementById('bg-stars'),bgX=bgC.getContext('2d');
+let BW,BH;function resBg(){BW=bgC.width=window.innerWidth;BH=bgC.height=window.innerHeight;}resBg();window.addEventListener('resize',resBg);
+const STARS=Array.from({length:280},()=>({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,s:Math.random()*.75+.1,op:Math.random()*.22+.04,tw:Math.random()*Math.PI*2,tws:Math.random()*.012+.004}));
+class SS{constructor(){this.rst(true);}rst(i=false){this.x=Math.random()*BW;this.y=i?Math.random()*BH:-10;this.len=Math.random()*110+40;this.speed=Math.random()*6+2;this.ang=Math.PI/4+Math.random()*.5;this.op=Math.random()*.5+.2;this.d=Math.random()*900;this.t=0;this.on=Math.random()<.2;}upd(){if(!this.on){this.t++;if(this.t>this.d){this.on=true;this.t=0;}return;}this.x+=Math.cos(this.ang)*this.speed;this.y+=Math.sin(this.ang)*this.speed;if(this.x>BW+200||this.y>BH+200)this.rst();}draw(c){if(!this.on)return;c.save();c.globalAlpha=this.op;const g=c.createLinearGradient(this.x,this.y,this.x-Math.cos(this.ang)*this.len,this.y-Math.sin(this.ang)*this.len);g.addColorStop(0,'rgba(255,255,255,.9)');g.addColorStop(1,'rgba(255,255,255,0)');c.strokeStyle=g;c.lineWidth=.8;c.beginPath();c.moveTo(this.x,this.y);c.lineTo(this.x-Math.cos(this.ang)*this.len,this.y-Math.sin(this.ang)*this.len);c.stroke();c.restore();}}
+const SH=Array.from({length:7},()=>new SS());let fr=0;
+(function aBg(){bgX.clearRect(0,0,BW,BH);fr++;STARS.forEach(p=>{p.tw+=p.tws;bgX.beginPath();bgX.arc(p.x,p.y,p.s,0,Math.PI*2);bgX.fillStyle=`rgba(255,255,255,${p.op*(0.5+0.5*Math.sin(p.tw))})`;bgX.fill();});if(fr%3===0)SH.forEach(s=>{s.upd();s.draw(bgX);});requestAnimationFrame(aBg);})();
+const snowC=document.getElementById('snow-c'),snowX=snowC.getContext('2d');
+let SW,sH;function resS(){SW=snowC.width=window.innerWidth;sH=snowC.height=window.innerHeight;}resS();window.addEventListener('resize',resS);
+const SNOW=Array.from({length:110},()=>({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,r:Math.random()*1.7+.3,op:Math.random()*.28+.05,sp:Math.random()*.4+.08,dr:Math.random()*.5-.25,tw:Math.random()*Math.PI*2,tws:Math.random()*.008+.002,wx:0}));
+(function aSn(){snowX.clearRect(0,0,SW,sH);SNOW.forEach(p=>{p.y+=p.sp;p.x+=p.dr+p.wx;p.tw+=p.tws;p.wx=Math.sin(p.tw)*.28;if(p.y>sH+5){p.y=-5;p.x=Math.random()*SW;}if(p.x<-5)p.x=SW+5;if(p.x>SW+5)p.x=-5;snowX.beginPath();snowX.arc(p.x,p.y,p.r,0,Math.PI*2);snowX.fillStyle=`rgba(255,255,255,${p.op*(0.6+0.4*Math.sin(p.tw))})`;snowX.fill();});requestAnimationFrame(aSn);})();
+
+// BILLING TOGGLE
+let isAnnual=false;
+function toggleBilling(){
+  isAnnual=!isAnnual;
+  const tog=document.getElementById('tog');
+  const lmo=document.getElementById('lbl-mo');
+  const lyr=document.getElementById('lbl-yr');
+  const sb=document.getElementById('save-badge');
+  tog.classList.toggle('on',isAnnual);
+  lmo.classList.toggle('act',!isAnnual);
+  lyr.classList.toggle('act',isAnnual);
+  sb.style.opacity=isAnnual?'1':'0.4';
+  // Update prices
+  document.getElementById('pro-price').textContent=isAnnual?'$13':'$15';
+  document.getElementById('ultra-price').textContent=isAnnual?'$33':'$35';
+  document.getElementById('pro-cycle').innerHTML=isAnnual?'Billed annually · <span>Best value</span>':'Billed monthly · <span>29-day billing cycle</span>';
+  document.getElementById('ultra-cycle').innerHTML=isAnnual?'Billed annually · <span>Best value</span>':'Billed monthly · <span>29-day billing cycle</span>';
+}
+
+// FAQ
+function toggleFAQ(btn){
+  const item=btn.closest('.faq-item');
+  const isOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+  if(!isOpen)item.classList.add('open');
+}
+
+// Coming Soon
+function showComingSoon(){
+  const t=document.getElementById('cs-toast');
+  t.style.display='block';
+  setTimeout(()=>{t.style.display='none';},3000);
+}
+
+// REVEAL
+const rv=document.querySelectorAll('.reveal');
+const ob=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.1});
+rv.forEach(el=>ob.observe(el));
+</script>
+</body>
+</html>

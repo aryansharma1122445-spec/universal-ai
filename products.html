@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products — UNIVERSAL.AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;background:#000;color:#fff;font-family:'Cormorant Garamond',serif;overflow-x:hidden;}
+*{cursor:none!important}
+#cur{position:fixed;width:7px;height:7px;background:#fff;border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);mix-blend-mode:difference;}
+#curR{position:fixed;width:26px;height:26px;border:1px solid rgba(255,255,255,.3);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:all .12s ease;}
+canvas.bg{position:fixed;inset:0;z-index:0;pointer-events:none;}
+#snow-c{position:fixed;inset:0;z-index:0;pointer-events:none;}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.022;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:256px;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;padding:0 40px;height:58px;background:transparent;}
+.nav-logo{font-family:'Orbitron',monospace;font-size:15px;font-weight:900;letter-spacing:4px;color:#fff;text-shadow:0 0 30px rgba(255,255,255,.2);margin-right:48px;white-space:nowrap;flex-shrink:0;text-decoration:none;}
+.nav-logo span{color:rgba(255,255,255,.5);}
+.nav-center{display:flex;align-items:center;gap:6px;flex:1;}
+.nav-link{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;color:rgba(255,255,255,.8);text-decoration:none;padding:6px 14px;border-radius:6px;transition:all .2s;}
+.nav-link:hover,.nav-link.active{color:#fff;text-shadow:0 0 20px rgba(255,255,255,.3);}
+.nav-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.try-btn{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;color:#000;background:#fff;border:none;border-radius:999px;padding:8px 18px;transition:all .2s;text-decoration:none;display:flex;align-items:center;gap:6px;}
+.try-btn:hover{background:rgba(255,255,255,.88);box-shadow:0 0 24px rgba(255,255,255,.12);}
+
+/* MAIN LAYOUT */
+.products-page{
+  position:relative;z-index:2;
+  min-height:100vh;
+  display:flex;
+  padding:0 0 0 0;
+}
+
+/* LEFT — Product List */
+.prod-list{
+  flex:1;
+  padding:100px 60px 60px 80px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-height:100vh;
+}
+.list-eyebrow{
+  font-family:'Share Tech Mono',monospace;font-size:8px;
+  letter-spacing:6px;color:rgba(255,255,255,.3);
+  margin-bottom:14px;
+  display:flex;align-items:center;gap:12px;
+}
+.list-eyebrow::before{content:'';width:28px;height:1px;background:rgba(255,255,255,.2);}
+.list-title{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(28px,4vw,48px);
+  font-weight:900;letter-spacing:8px;
+  color:#fff;margin-bottom:60px;
+  text-shadow:0 0 40px rgba(255,255,255,.08);
+}
+
+/* Product Item */
+.prod-item{
+  display:flex;align-items:flex-start;gap:28px;
+  padding:28px 0;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  text-decoration:none;
+  position:relative;
+  transition:all .35s cubic-bezier(.16,1,.3,1);
+  overflow:hidden;
+}
+.prod-item:first-of-type{border-top:1px solid rgba(255,255,255,.06);}
+.prod-item::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:0;background:rgba(255,255,255,.03);
+  transition:width .35s cubic-bezier(.16,1,.3,1);
+}
+.prod-item:hover::before{width:100%;}
+.prod-item:hover{padding-left:14px;}
+
+.prod-num{
+  font-family:'Orbitron',monospace;font-size:11px;
+  font-weight:700;letter-spacing:2px;
+  color:rgba(255,255,255,.15);
+  flex-shrink:0;width:40px;
+  padding-top:3px;
+  transition:color .3s;
+}
+.prod-item:hover .prod-num{color:rgba(255,255,255,.6);}
+
+.prod-content{flex:1;}
+.prod-name{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(18px,2.5vw,26px);
+  font-weight:900;letter-spacing:4px;color:#fff;
+  margin-bottom:6px;
+  transition:text-shadow .3s;
+}
+.prod-item:hover .prod-name{text-shadow:0 0 30px rgba(255,255,255,.3);}
+.prod-tagline{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-size:15px;
+  color:rgba(255,255,255,.4);
+  letter-spacing:1px;margin-bottom:5px;
+  transition:color .3s;
+}
+.prod-item:hover .prod-tagline{color:rgba(255,255,255,.65);}
+.prod-desc{
+  font-family:'Share Tech Mono',monospace;
+  font-size:8px;letter-spacing:2px;
+  color:rgba(255,255,255,.22);
+  transition:color .3s;
+}
+.prod-item:hover .prod-desc{color:rgba(255,255,255,.45);}
+
+.prod-arrow{
+  font-size:20px;color:rgba(255,255,255,.15);
+  flex-shrink:0;padding-top:6px;
+  transition:all .3s;
+}
+.prod-item:hover .prod-arrow{
+  color:rgba(255,255,255,.85);
+  transform:translateX(6px);
+}
+
+/* RIGHT — Preview Panel */
+.prod-preview{
+  width:420px;flex-shrink:0;
+  position:sticky;top:0;height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  padding:80px 40px 60px 20px;
+  pointer-events:none;
+}
+.preview-card{
+  width:100%;max-width:340px;
+  opacity:0;transform:translateX(20px) scale(.96);
+  transition:all .4s cubic-bezier(.16,1,.3,1);
+  position:absolute;
+}
+.preview-card.show{opacity:1;transform:translateX(0) scale(1);}
+.pc-inner{
+  background:rgba(10,10,10,.9);
+  border:1px solid rgba(255,255,255,.1);
+  padding:32px;
+  position:relative;overflow:hidden;
+  backdrop-filter:blur(20px);
+  box-shadow:0 20px 60px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.04);
+}
+.pc-inner::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);}
+.pc-icon{font-size:40px;margin-bottom:20px;display:block;filter:drop-shadow(0 0 20px rgba(255,255,255,.2));}
+.pc-name{font-family:'Orbitron',monospace;font-size:14px;font-weight:900;letter-spacing:4px;color:#fff;margin-bottom:8px;text-shadow:0 0 20px rgba(255,255,255,.15);}
+.pc-tag{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:rgba(255,255,255,.55);margin-bottom:20px;line-height:1.5;}
+.pc-features{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
+.pc-feat{display:flex;align-items:center;gap:10px;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;color:rgba(255,255,255,.5);}
+.pc-feat::before{content:'';width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.4);flex-shrink:0;}
+.pc-btn{
+  display:block;text-align:center;
+  font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:3px;
+  color:#000;background:#fff;padding:11px;
+  text-decoration:none;transition:all .2s;
+  pointer-events:all;
+}
+.pc-btn:hover{background:rgba(255,255,255,.88);}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="curR"></div>
+<canvas class="bg" id="bg-nebula"></canvas>
+<canvas class="bg" id="bg-stars"></canvas>
+<canvas id="snow-c"></canvas>
+<div class="grain"></div>
+
+<nav>
+  <a href="universal_ai.html" class="nav-logo">UNIVERSAL<span>.AI</span></a>
+  <div class="nav-center">
+    <a href="products.html" class="nav-link active">Products</a>
+    <a href="#" class="nav-link">Billing</a>
+    <a href="about.html" class="nav-link">About Us</a>
+  </div>
+  <div class="nav-right">
+    <a href="jarvis_v10.html" class="try-btn">Try JARVIS ↗</a>
+  </div>
+</nav>
+
+<div class="products-page">
+  <!-- LEFT LIST -->
+  <div class="prod-list">
+    <div class="list-eyebrow">OUR PRODUCTS</div>
+    <div class="list-title">What We Build.</div>
+
+    <a href="jarvis.html" class="prod-item"
+      onmouseenter="showPreview('jarvis')" onmouseleave="hidePreview()">
+      <div class="prod-num">01</div>
+      <div class="prod-content">
+        <div class="prod-name">JARVIS</div>
+        <div class="prod-tagline">"Your Personal Intelligence"</div>
+        <div class="prod-desc">MAIN AI · TALKS · THINKS · REMEMBERS · HELPS</div>
+      </div>
+      <div class="prod-arrow">→</div>
+    </a>
+
+    <a href="codemachine.html" class="prod-item"
+      onmouseenter="showPreview('code')" onmouseleave="hidePreview()">
+      <div class="prod-num">02</div>
+      <div class="prod-content">
+        <div class="prod-name">CODEMACHINE</div>
+        <div class="prod-tagline">"Built for Those Who Build"</div>
+        <div class="prod-desc">SPECIALLY BUILT FOR CODE · ANY LANGUAGE · ANY PROBLEM</div>
+      </div>
+      <div class="prod-arrow">→</div>
+    </a>
+
+    <a href="jarvis-voice.html" class="prod-item"
+      onmouseenter="showPreview('voice')" onmouseleave="hidePreview()">
+      <div class="prod-num">03</div>
+      <div class="prod-content">
+        <div class="prod-name">JARVIS VOICE</div>
+        <div class="prod-tagline">"Speak. It Listens. It Acts."</div>
+        <div class="prod-desc">VOICE AI AGENT · HANDS FREE · INSTANT RESPONSE</div>
+      </div>
+      <div class="prod-arrow">→</div>
+    </a>
+
+    <a href="merlin.html" class="prod-item"
+      onmouseenter="showPreview('merlin')" onmouseleave="hidePreview()">
+      <div class="prod-num">04</div>
+      <div class="prod-content">
+        <div class="prod-name">MERLIN</div>
+        <div class="prod-tagline">"The Mind Behind the Magic"</div>
+        <div class="prod-desc">AI COMPANION · SMARTER CONVERSATIONS · ALWAYS READY</div>
+      </div>
+      <div class="prod-arrow">→</div>
+    </a>
+  </div>
+
+  <!-- RIGHT PREVIEW -->
+  <div class="prod-preview">
+
+    <div class="preview-card" id="prev-jarvis">
+      <div class="pc-inner">
+        <span class="pc-icon">🤖</span>
+        <div class="pc-name">JARVIS</div>
+        <div class="pc-tag">Your intelligent companion for everything — conversations, research, analysis, and more.</div>
+        <div class="pc-features">
+          <div class="pc-feat">Multi-chat with memory</div>
+          <div class="pc-feat">Web & deep search</div>
+          <div class="pc-feat">Voice input support</div>
+          <div class="pc-feat">Model switching</div>
+          <div class="pc-feat">Notes & export</div>
+        </div>
+        <a href="jarvis.html" class="pc-btn">EXPLORE JARVIS →</a>
+      </div>
+    </div>
+
+    <div class="preview-card" id="prev-code">
+      <div class="pc-inner">
+        <span class="pc-icon">💻</span>
+        <div class="pc-name">CODEMACHINE</div>
+        <div class="pc-tag">Every language. Every framework. Every problem. Built exclusively for developers.</div>
+        <div class="pc-features">
+          <div class="pc-feat">50+ programming languages</div>
+          <div class="pc-feat">Debug & optimize code</div>
+          <div class="pc-feat">Code explanation</div>
+          <div class="pc-feat">Architecture design</div>
+          <div class="pc-feat">Live code preview</div>
+        </div>
+        <a href="codemachine.html" class="pc-btn">EXPLORE CODEMACHINE →</a>
+      </div>
+    </div>
+
+    <div class="preview-card" id="prev-voice">
+      <div class="pc-inner">
+        <span class="pc-icon">🎤</span>
+        <div class="pc-name">JARVIS VOICE</div>
+        <div class="pc-tag">No typing. No clicking. Just speak — and your AI acts instantly, hands-free.</div>
+        <div class="pc-features">
+          <div class="pc-feat">Natural voice commands</div>
+          <div class="pc-feat">Real-time response</div>
+          <div class="pc-feat">Hands-free operation</div>
+          <div class="pc-feat">Multi-language support</div>
+          <div class="pc-feat">Always listening mode</div>
+        </div>
+        <a href="jarvis-voice.html" class="pc-btn">EXPLORE VOICE →</a>
+      </div>
+    </div>
+
+    <div class="preview-card" id="prev-merlin">
+      <div class="pc-inner">
+        <span class="pc-icon">🔮</span>
+        <div class="pc-name">MERLIN</div>
+        <div class="pc-tag">A deeper, more personal AI companion — for those who want more than just answers.</div>
+        <div class="pc-features">
+          <div class="pc-feat">Deep conversation AI</div>
+          <div class="pc-feat">Personality adaptation</div>
+          <div class="pc-feat">Long-term memory</div>
+          <div class="pc-feat">Creative thinking</div>
+          <div class="pc-feat">Personal companion</div>
+        </div>
+        <a href="merlin.html" class="pc-btn">EXPLORE MERLIN →</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// CURSOR
+const cur=document.getElementById('cur'),curR=document.getElementById('curR');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function aC(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(aC);})();
+
+// NEBULA
+const nebC=document.getElementById('bg-nebula'),nebX=nebC.getContext('2d');
+function resNeb(){nebC.width=window.innerWidth;nebC.height=window.innerHeight;nebX.clearRect(0,0,nebC.width,nebC.height);[{x:.1,y:.2,r:nebC.width*.3,c:'rgba(60,60,100,.06)'},{x:.9,y:.7,r:nebC.width*.28,c:'rgba(50,30,70,.05)'},{x:.5,y:.5,r:nebC.width*.25,c:'rgba(30,50,70,.04)'}].forEach(b=>{const g=nebX.createRadialGradient(b.x*nebC.width,b.y*nebC.height,0,b.x*nebC.width,b.y*nebC.height,b.r);g.addColorStop(0,b.c);g.addColorStop(1,'transparent');nebX.fillStyle=g;nebX.fillRect(0,0,nebC.width,nebC.height);});}
+resNeb();window.addEventListener('resize',resNeb);
+
+// STARS
+const bgC=document.getElementById('bg-stars'),bgX=bgC.getContext('2d');
+let BW,BH;
+function resBg(){BW=bgC.width=window.innerWidth;BH=bgC.height=window.innerHeight;}
+resBg();window.addEventListener('resize',resBg);
+const STARS=Array.from({length:260},()=>({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,s:Math.random()*.7+.1,op:Math.random()*.2+.04,tw:Math.random()*Math.PI*2,tws:Math.random()*.01+.003}));
+(function aBg(){bgX.clearRect(0,0,BW,BH);STARS.forEach(p=>{p.tw+=p.tws;bgX.beginPath();bgX.arc(p.x,p.y,p.s,0,Math.PI*2);bgX.fillStyle=`rgba(255,255,255,${p.op*(0.5+0.5*Math.sin(p.tw))})`;bgX.fill();});requestAnimationFrame(aBg);})();
+
+// SNOW
+const snowC=document.getElementById('snow-c'),snowX=snowC.getContext('2d');
+let SW,SH;
+function resSnow(){SW=snowC.width=window.innerWidth;SH=snowC.height=window.innerHeight;}
+resSnow();window.addEventListener('resize',resSnow);
+const SNOW=Array.from({length:100},()=>({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,r:Math.random()*1.6+.3,op:Math.random()*.3+.05,sp:Math.random()*.4+.1,dr:Math.random()*.6-.3,tw:Math.random()*Math.PI*2,tws:Math.random()*.008+.002,wx:0}));
+(function aSnow(){snowX.clearRect(0,0,SW,SH);SNOW.forEach(p=>{p.y+=p.sp;p.x+=p.dr+p.wx;p.tw+=p.tws;p.wx=Math.sin(p.tw)*0.3;if(p.y>SH+5){p.y=-5;p.x=Math.random()*SW;}if(p.x<-5)p.x=SW+5;if(p.x>SW+5)p.x=-5;snowX.beginPath();snowX.arc(p.x,p.y,p.r,0,Math.PI*2);snowX.fillStyle=`rgba(255,255,255,${p.op*(0.6+0.4*Math.sin(p.tw))})`;snowX.fill();});requestAnimationFrame(aSnow);})();
+
+// PREVIEW
+let currentPrev=null,hideTimer=null;
+function showPreview(id){
+  clearTimeout(hideTimer);
+  if(currentPrev){document.getElementById('prev-'+currentPrev).classList.remove('show');}
+  currentPrev=id;
+  document.getElementById('prev-'+id).classList.add('show');
+}
+function hidePreview(){
+  hideTimer=setTimeout(()=>{
+    if(currentPrev){document.getElementById('prev-'+currentPrev).classList.remove('show');currentPrev=null;}
+  },150);
+}
+</script>
+</body>
+</html>

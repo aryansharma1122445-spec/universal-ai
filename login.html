@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In — UNIVERSAL.AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;background:#000;color:#fff;font-family:'Cormorant Garamond',serif;overflow:hidden;}
+*{cursor:none!important}
+#cur{position:fixed;width:7px;height:7px;background:#fff;border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);mix-blend-mode:difference;}
+#curR{position:fixed;width:26px;height:26px;border:1px solid rgba(255,255,255,.3);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:all .12s ease;}
+#bg-nebula,#bg-stars,#snow-c{position:fixed;inset:0;z-index:0;pointer-events:none;}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.02;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:256px;}
+
+/* BACK TO HOME */
+.back-btn{position:fixed;top:24px;left:32px;z-index:100;display:flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.4);text-decoration:none;transition:color .2s;background:#000;padding:8px 14px;}
+.back-btn:hover{color:#fff;}
+
+/* LAYOUT — split screen */
+.layout{position:relative;z-index:2;width:100vw;height:100vh;display:grid;grid-template-columns:1fr 1fr;}
+
+/* LEFT PANEL */
+.left{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:80px 70px;border-right:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden;}
+.left::before{content:'';position:absolute;top:0;right:-1px;bottom:0;width:1px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.12),transparent);}
+
+/* Animated tagline */
+.l-eyebrow{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:6px;color:rgba(255,255,255,.28);margin-bottom:28px;display:flex;align-items:center;gap:10px;}
+.l-eyebrow::before{content:'';width:22px;height:1px;background:rgba(255,255,255,.2);}
+.l-logo{font-family:'Orbitron',monospace;font-size:clamp(28px,3.5vw,44px);font-weight:900;letter-spacing:6px;color:#fff;margin-bottom:10px;text-shadow:0 0 60px rgba(255,255,255,.1);line-height:1;}
+.l-logo span{color:rgba(255,255,255,.4);}
+.l-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(15px,1.8vw,20px);color:rgba(255,255,255,.35);letter-spacing:3px;margin-bottom:60px;line-height:1.5;}
+
+/* Stats */
+.l-stats{display:flex;flex-direction:column;gap:20px;}
+.l-stat{display:flex;align-items:center;gap:16px;}
+.ls-icon{font-size:16px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);flex-shrink:0;}
+.ls-text{}
+.ls-t{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.7);}
+.ls-d{font-family:'Cormorant Garamond',serif;font-size:13px;color:rgba(255,255,255,.3);}
+
+/* Phase badge */
+.phase-badge{display:inline-flex;align-items:center;gap:8px;margin-top:48px;padding:7px 16px;border:1px solid rgba(255,255,255,.08);font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.3);}
+.phase-dot{width:5px;height:5px;border-radius:50%;background:#39d98a;box-shadow:0 0 6px rgba(57,217,138,.5);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+
+/* RIGHT PANEL — Login Form */
+.right{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 70px;}
+
+.form-wrap{width:100%;max-width:380px;}
+
+/* Heading */
+.f-heading{font-family:'Orbitron',monospace;font-size:clamp(20px,2.5vw,28px);font-weight:900;letter-spacing:5px;color:#fff;margin-bottom:8px;text-shadow:0 0 30px rgba(255,255,255,.08);}
+.f-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,.35);letter-spacing:3px;margin-bottom:40px;}
+
+/* TABS */
+.f-tabs{display:flex;gap:0;margin-bottom:32px;border-bottom:1px solid rgba(255,255,255,.08);}
+.f-tab{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.3);padding:10px 20px;background:transparent;border:none;transition:all .2s;position:relative;}
+.f-tab::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:#fff;transform:scaleX(0);transition:transform .2s;}
+.f-tab.act{color:#fff;}
+.f-tab.act::after{transform:scaleX(1);}
+.f-tab:hover{color:rgba(255,255,255,.7);}
+
+/* FORM PANELS */
+.f-panel{display:none;}
+.f-panel.show{display:block;}
+
+/* Inputs */
+.f-group{margin-bottom:18px;}
+.f-lbl{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.35);margin-bottom:8px;display:block;}
+.f-inp{width:100%;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);color:#fff;padding:13px 16px;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;outline:none;transition:all .25s;border-radius:2px;}
+.f-inp:focus{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.05);box-shadow:0 0 20px rgba(255,255,255,.04);}
+.f-inp::placeholder{color:rgba(255,255,255,.2);}
+
+/* Password strength */
+.pw-strength{display:flex;gap:4px;margin-top:8px;}
+.pw-bar{height:2px;flex:1;background:rgba(255,255,255,.08);border-radius:1px;transition:background .3s;}
+.pw-bar.weak{background:#ff4d4d;}
+.pw-bar.med{background:#f0c030;}
+.pw-bar.strong{background:#39d98a;}
+
+/* Forgot */
+.f-forgot{display:block;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.25);text-align:right;margin-top:-10px;margin-bottom:18px;text-decoration:none;transition:color .2s;}
+.f-forgot:hover{color:rgba(255,255,255,.6);}
+
+/* Submit btn */
+.f-submit{width:100%;font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:4px;color:#000;background:#fff;border:none;padding:14px;transition:all .25s;margin-bottom:20px;position:relative;overflow:hidden;}
+.f-submit:hover{background:rgba(255,255,255,.88);box-shadow:0 0 30px rgba(255,255,255,.12);}
+.f-submit:active{transform:scale(.99);}
+
+/* Divider */
+.f-or{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+.f-or-line{flex:1;height:1px;background:rgba(255,255,255,.06);}
+.f-or-txt{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.2);}
+
+/* Social btns */
+.f-social{display:flex;gap:10px;margin-bottom:28px;}
+.f-soc-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:rgba(255,255,255,.55);transition:all .2s;}
+.f-soc-btn:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.25);color:#fff;}
+.f-soc-ic{font-size:14px;}
+
+/* Terms */
+.f-terms{font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:1px;color:rgba(255,255,255,.2);text-align:center;line-height:1.8;}
+.f-terms a{color:rgba(255,255,255,.35);text-decoration:none;}
+.f-terms a:hover{color:rgba(255,255,255,.6);}
+
+/* Switch tab hint */
+.f-switch{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.25);text-align:center;margin-top:20px;}
+.f-switch a{color:rgba(255,255,255,.55);text-decoration:none;transition:color .2s;}
+.f-switch a:hover{color:#fff;}
+
+/* Success state */
+.f-success{display:none;text-align:center;padding:20px 0;}
+.fs-icon{font-size:48px;margin-bottom:16px;}
+.fs-title{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;letter-spacing:5px;color:#fff;margin-bottom:8px;}
+.fs-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:rgba(255,255,255,.4);letter-spacing:3px;}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="curR"></div>
+<canvas id="bg-nebula"></canvas><canvas id="bg-stars"></canvas><canvas id="snow-c"></canvas>
+<div class="grain"></div>
+
+<a href="universal_ai.html" class="back-btn">← UNIVERSAL.AI</a>
+
+<div class="layout">
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="l-eyebrow">UNIVERSAL.AI</div>
+    <div class="l-logo">THE NEXT<br>GENERATION<span>.</span></div>
+    <div class="l-tagline">Intelligence without limits.<br>Power without compromise.</div>
+
+    <div class="l-stats">
+      <div class="l-stat">
+        <div class="ls-icon">🧠</div>
+        <div class="ls-text">
+          <div class="ls-t">INTELLIGENT BY DESIGN</div>
+          <div class="ls-d">AI that thinks with you, not for you</div>
+        </div>
+      </div>
+      <div class="l-stat">
+        <div class="ls-icon">🔒</div>
+        <div class="ls-text">
+          <div class="ls-t">PRIVACY ABSOLUTE</div>
+          <div class="ls-d">Your data never leaves your control</div>
+        </div>
+      </div>
+      <div class="l-stat">
+        <div class="ls-icon">⚡</div>
+        <div class="ls-text">
+          <div class="ls-t">BUILT TO EVOLVE</div>
+          <div class="ls-d">Phase 1 of 5 — the journey has begun</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-badge">
+      <div class="phase-dot"></div>
+      PHASE 1 · SYSTEMS ONLINE
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <div class="form-wrap">
+
+      <div class="f-heading">ACCESS</div>
+      <div class="f-sub">Your intelligence awaits.</div>
+
+      <!-- TABS -->
+      <div class="f-tabs">
+        <button class="f-tab act" onclick="switchTab('login',this)">SIGN IN</button>
+        <button class="f-tab" onclick="switchTab('signup',this)">CREATE ACCOUNT</button>
+      </div>
+
+      <!-- LOGIN PANEL -->
+      <div class="f-panel show" id="panel-login">
+        <div class="f-group">
+          <label class="f-lbl">EMAIL ADDRESS</label>
+          <input type="email" class="f-inp" placeholder="you@example.com"/>
+        </div>
+        <div class="f-group">
+          <label class="f-lbl">PASSWORD</label>
+          <input type="password" class="f-inp" placeholder="Enter your password"/>
+        </div>
+        <a href="#" class="f-forgot">Forgot password?</a>
+        <button class="f-submit" onclick="handleLogin()">SIGN IN →</button>
+        <div class="f-or"><div class="f-or-line"></div><div class="f-or-txt">OR</div><div class="f-or-line"></div></div>
+        <div class="f-social">
+          <button class="f-soc-btn"><span class="f-soc-ic">G</span> Google</button>
+          <button class="f-soc-btn"><span class="f-soc-ic">⌘</span> Apple</button>
+        </div>
+        <div class="f-terms">By signing in you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></div>
+        <div class="f-switch">No account? <a href="#" onclick="switchTab('signup',document.querySelectorAll('.f-tab')[1]);return false;">Create one →</a></div>
+      </div>
+
+      <!-- SIGNUP PANEL -->
+      <div class="f-panel" id="panel-signup">
+        <div class="f-group">
+          <label class="f-lbl">FULL NAME</label>
+          <input type="text" class="f-inp" placeholder="Your name"/>
+        </div>
+        <div class="f-group">
+          <label class="f-lbl">EMAIL ADDRESS</label>
+          <input type="email" class="f-inp" placeholder="you@example.com"/>
+        </div>
+        <div class="f-group">
+          <label class="f-lbl">PASSWORD</label>
+          <input type="password" class="f-inp" id="pw-inp" placeholder="Create a strong password" oninput="checkPW(this.value)"/>
+          <div class="pw-strength">
+            <div class="pw-bar" id="pb1"></div>
+            <div class="pw-bar" id="pb2"></div>
+            <div class="pw-bar" id="pb3"></div>
+            <div class="pw-bar" id="pb4"></div>
+          </div>
+        </div>
+        <button class="f-submit" onclick="handleSignup()" style="margin-top:8px;">CREATE ACCOUNT →</button>
+        <div class="f-or"><div class="f-or-line"></div><div class="f-or-txt">OR</div><div class="f-or-line"></div></div>
+        <div class="f-social">
+          <button class="f-soc-btn"><span class="f-soc-ic">G</span> Google</button>
+          <button class="f-soc-btn"><span class="f-soc-ic">⌘</span> Apple</button>
+        </div>
+        <div class="f-terms">By creating an account you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></div>
+        <div class="f-switch">Already have an account? <a href="#" onclick="switchTab('login',document.querySelectorAll('.f-tab')[0]);return false;">Sign in →</a></div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="f-success" id="f-success">
+        <div class="fs-icon">✓</div>
+        <div class="fs-title">ACCESS GRANTED</div>
+        <div class="fs-sub">Redirecting to JARVIS...</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// CURSOR
+const cur=document.getElementById('cur'),curR=document.getElementById('curR');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function aC(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(aC);})();
+
+// BG
+const nebC=document.getElementById('bg-nebula'),nebX=nebC.getContext('2d');
+function resNeb(){nebC.width=window.innerWidth;nebC.height=window.innerHeight;nebX.clearRect(0,0,nebC.width,nebC.height);[{x:.15,y:.3,r:nebC.width*.35,c:'rgba(40,40,80,.07)'},{x:.85,y:.7,r:nebC.width*.3,c:'rgba(30,20,60,.05)'}].forEach(b=>{const g=nebX.createRadialGradient(b.x*nebC.width,b.y*nebC.height,0,b.x*nebC.width,b.y*nebC.height,b.r);g.addColorStop(0,b.c);g.addColorStop(1,'transparent');nebX.fillStyle=g;nebX.fillRect(0,0,nebC.width,nebC.height);});}
+resNeb();window.addEventListener('resize',resNeb);
+const bgC=document.getElementById('bg-stars'),bgX=bgC.getContext('2d');
+let BW,BH;function resBg(){BW=bgC.width=window.innerWidth;BH=bgC.height=window.innerHeight;}resBg();window.addEventListener('resize',resBg);
+const STARS=Array.from({length:260},()=>({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,s:Math.random()*.75+.1,op:Math.random()*.2+.04,tw:Math.random()*Math.PI*2,tws:Math.random()*.012+.004}));
+class SS{constructor(){this.rst(true);}rst(i=false){this.x=Math.random()*BW;this.y=i?Math.random()*BH:-10;this.len=Math.random()*110+40;this.speed=Math.random()*6+2;this.ang=Math.PI/4+Math.random()*.5;this.op=Math.random()*.5+.2;this.d=Math.random()*900;this.t=0;this.on=Math.random()<.2;}upd(){if(!this.on){this.t++;if(this.t>this.d){this.on=true;this.t=0;}return;}this.x+=Math.cos(this.ang)*this.speed;this.y+=Math.sin(this.ang)*this.speed;if(this.x>BW+200||this.y>BH+200)this.rst();}draw(c){if(!this.on)return;c.save();c.globalAlpha=this.op;const g=c.createLinearGradient(this.x,this.y,this.x-Math.cos(this.ang)*this.len,this.y-Math.sin(this.ang)*this.len);g.addColorStop(0,'rgba(255,255,255,.9)');g.addColorStop(1,'rgba(255,255,255,0)');c.strokeStyle=g;c.lineWidth=.8;c.beginPath();c.moveTo(this.x,this.y);c.lineTo(this.x-Math.cos(this.ang)*this.len,this.y-Math.sin(this.ang)*this.len);c.stroke();c.restore();}}
+const SH=Array.from({length:6},()=>new SS());let fr=0;
+(function aBg(){bgX.clearRect(0,0,BW,BH);fr++;STARS.forEach(p=>{p.tw+=p.tws;bgX.beginPath();bgX.arc(p.x,p.y,p.s,0,Math.PI*2);bgX.fillStyle=`rgba(255,255,255,${p.op*(0.5+0.5*Math.sin(p.tw))})`;bgX.fill();});if(fr%3===0)SH.forEach(s=>{s.upd();s.draw(bgX);});requestAnimationFrame(aBg);})();
+const snowC=document.getElementById('snow-c'),snowX=snowC.getContext('2d');
+let SW,sH;function resS(){SW=snowC.width=window.innerWidth;sH=snowC.height=window.innerHeight;}resS();window.addEventListener('resize',resS);
+const SNOW=Array.from({length:90},()=>({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,r:Math.random()*1.6+.3,op:Math.random()*.25+.04,sp:Math.random()*.35+.08,dr:Math.random()*.5-.25,tw:Math.random()*Math.PI*2,tws:Math.random()*.008+.002,wx:0}));
+(function aSn(){snowX.clearRect(0,0,SW,sH);SNOW.forEach(p=>{p.y+=p.sp;p.x+=p.dr+p.wx;p.tw+=p.tws;p.wx=Math.sin(p.tw)*.28;if(p.y>sH+5){p.y=-5;p.x=Math.random()*SW;}if(p.x<-5)p.x=SW+5;if(p.x>SW+5)p.x=-5;snowX.beginPath();snowX.arc(p.x,p.y,p.r,0,Math.PI*2);snowX.fillStyle=`rgba(255,255,255,${p.op*(0.6+0.4*Math.sin(p.tw))})`;snowX.fill();});requestAnimationFrame(aSn);})();
+
+// TABS
+function switchTab(tab, btn){
+  document.querySelectorAll('.f-tab').forEach(t=>t.classList.remove('act'));
+  btn.classList.add('act');
+  document.querySelectorAll('.f-panel').forEach(p=>p.classList.remove('show'));
+  document.getElementById('panel-'+tab).classList.add('show');
+  document.getElementById('f-success').style.display='none';
+}
+
+// PASSWORD STRENGTH
+function checkPW(v){
+  const bars=[document.getElementById('pb1'),document.getElementById('pb2'),document.getElementById('pb3'),document.getElementById('pb4')];
+  bars.forEach(b=>{b.className='pw-bar';});
+  if(v.length===0)return;
+  let score=0;
+  if(v.length>=6)score++;
+  if(v.length>=10)score++;
+  if(/[A-Z]/.test(v)&&/[0-9]/.test(v))score++;
+  if(/[^A-Za-z0-9]/.test(v))score++;
+  const cls=score<=1?'weak':score<=2?'med':'strong';
+  for(let i=0;i<score;i++)bars[i].classList.add(cls);
+}
+
+// SUBMIT
+function handleLogin(){
+  const btn=document.querySelector('#panel-login .f-submit');
+  btn.textContent='AUTHENTICATING...';btn.style.opacity='.7';
+  setTimeout(()=>{
+    document.getElementById('panel-login').style.display='none';
+    document.getElementById('f-success').style.display='block';
+    setTimeout(()=>{window.location.href='jarvis_v10.html';},1800);
+  },1200);
+}
+function handleSignup(){
+  const btn=document.querySelector('#panel-signup .f-submit');
+  btn.textContent='CREATING ACCOUNT...';btn.style.opacity='.7';
+  setTimeout(()=>{
+    document.getElementById('panel-signup').style.display='none';
+    document.getElementById('f-success').style.display='block';
+    setTimeout(()=>{window.location.href='jarvis_v10.html';},1800);
+  },1400);
+}
+
+// Enter key
+document.addEventListener('keydown',e=>{if(e.key==='Enter'){const active=document.querySelector('.f-panel.show');if(active&&active.id==='panel-login')handleLogin();else if(active&&active.id==='panel-signup')handleSignup();}});
+</script>
+</body>
+</html>
