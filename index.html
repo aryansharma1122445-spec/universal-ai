@@ -762,7 +762,7 @@ footer{
         <a href="#" class="dd-item">🤖 JARVIS</a>
       </div>
     </div>
-    <a href="/jarvis" class="try-btn">Try JARVIS <span class="try-arr">↗</span></a>
+    <a href="/login" class="try-btn">Try JARVIS <span class="try-arr">↗</span></a>
   </div>
 </nav>
 
@@ -1070,11 +1070,14 @@ revEls.forEach(el=>obs.observe(el));
 // SEND on enter
 document.getElementById('hero-inp').addEventListener('keydown',e=>{
   if(e.key==='Enter'&&e.target.value.trim()){
-    window.location.href='jarvis_v10.html';
+    const q=e.target.value.trim();
+    sessionStorage.setItem('hero_query',q);
+    window.location.href='/login';
   }
 });
 document.querySelector('.hi-send').addEventListener('click',()=>{
-  if(document.getElementById('hero-inp').value.trim()) window.location.href='jarvis_v10.html';
+  const q=document.getElementById('hero-inp').value.trim();
+  if(q){sessionStorage.setItem('hero_query',q);window.location.href='/login';}
 });
 
 
