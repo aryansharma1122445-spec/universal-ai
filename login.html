@@ -8,8 +8,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   // ⚠️ YAHAN APNI KEYS DAALO
-  const SUPABASE_URL = 'https://opnohduebnogxmvqbavq.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9wbm9oZHVlYm5vZ3htdnFiYXZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMTg0MjMsImV4cCI6MjA4OTY5NDQyM30.CxZnI1LFG4qc4i1eoJW9dJQftsBPT4fd-0jswL_kVEM';
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
   const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 </script>
 <style>
@@ -91,9 +91,9 @@ html,body{width:100%;height:100%;background:#000;color:#fff;font-family:'Cormora
 <div id="cur"></div><div id="curR"></div>
 <canvas id="bg-nebula"></canvas><canvas id="bg-stars"></canvas><canvas id="snow-c"></canvas>
 <div class="grain"></div>
- 
+
 <a href="/" class="back-btn">← UNIVERSAL.AI</a>
- 
+
 <div class="layout">
   <!-- LEFT -->
   <div class="left">
@@ -128,28 +128,31 @@ html,body{width:100%;height:100%;background:#000;color:#fff;font-family:'Cormora
       PHASE 1 · SYSTEMS ONLINE
     </div>
   </div>
- 
+
   <!-- RIGHT -->
   <div class="right">
     <div class="form-wrap">
       <div class="f-heading">ACCESS</div>
       <div class="f-sub">Your intelligence awaits.</div>
- 
+
       <div class="f-tabs">
         <button class="f-tab act" onclick="switchTab('login',this)">SIGN IN</button>
         <button class="f-tab" onclick="switchTab('signup',this)">CREATE ACCOUNT</button>
       </div>
- 
+
       <!-- LOGIN PANEL -->
       <div class="f-panel show" id="panel-login">
         <div class="f-error" id="login-error"></div>
         <div class="f-group">
           <label class="f-lbl">EMAIL ADDRESS</label>
-          <input type="email" class="f-inp" id="login-email" placeholder="you@example.com"/>
+          <input type="email" class="f-inp" id="login-email" placeholder="you@example.com" autocomplete="off"/>
         </div>
         <div class="f-group">
           <label class="f-lbl">PASSWORD</label>
-          <input type="password" class="f-inp" id="login-password" placeholder="Enter your password"/>
+          <div style="position:relative;">
+            <input type="password" class="f-inp" id="login-password" placeholder="Enter your password" autocomplete="new-password" style="padding-right:40px;"/>
+            <button onclick="toggleEye('login-password','eye1')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:rgba(255,255,255,.4);font-size:16px;transition:color .2s;" id="eye1" title="Show/Hide">👁</button>
+          </div>
         </div>
         <a href="#" class="f-forgot" onclick="handleForgot();return false;">Forgot password?</a>
         <button class="f-submit" id="login-btn" onclick="handleLogin()">SIGN IN →</button>
@@ -161,21 +164,24 @@ html,body{width:100%;height:100%;background:#000;color:#fff;font-family:'Cormora
         <div class="f-terms">By signing in you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></div>
         <div class="f-switch">No account? <a href="#" onclick="switchTab('signup',document.querySelectorAll('.f-tab')[1]);return false;">Create one →</a></div>
       </div>
- 
+
       <!-- SIGNUP PANEL -->
       <div class="f-panel" id="panel-signup">
         <div class="f-error" id="signup-error"></div>
         <div class="f-group">
           <label class="f-lbl">FULL NAME</label>
-          <input type="text" class="f-inp" id="signup-name" placeholder="Your name"/>
+          <input type="text" class="f-inp" id="signup-name" placeholder="Your name" autocomplete="off"/>
         </div>
         <div class="f-group">
           <label class="f-lbl">EMAIL ADDRESS</label>
-          <input type="email" class="f-inp" id="signup-email" placeholder="you@example.com"/>
+          <input type="email" class="f-inp" id="signup-email" placeholder="you@example.com" autocomplete="off"/>
         </div>
         <div class="f-group">
           <label class="f-lbl">PASSWORD</label>
-          <input type="password" class="f-inp" id="signup-password" placeholder="Create a strong password" oninput="checkPW(this.value)"/>
+          <div style="position:relative;">
+            <input type="password" class="f-inp" id="signup-password" placeholder="Create a strong password" autocomplete="new-password" oninput="checkPW(this.value)" style="padding-right:40px;"/>
+            <button onclick="toggleEye('signup-password','eye2')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:rgba(255,255,255,.4);font-size:16px;transition:color .2s;" id="eye2" title="Show/Hide">👁</button>
+          </div>
           <div class="pw-strength">
             <div class="pw-bar" id="pb1"></div>
             <div class="pw-bar" id="pb2"></div>
@@ -192,7 +198,7 @@ html,body{width:100%;height:100%;background:#000;color:#fff;font-family:'Cormora
         <div class="f-terms">By creating an account you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></div>
         <div class="f-switch">Already have an account? <a href="#" onclick="switchTab('login',document.querySelectorAll('.f-tab')[0]);return false;">Sign in →</a></div>
       </div>
- 
+
       <!-- SUCCESS -->
       <div class="f-success" id="f-success">
         <div class="fs-icon">✓</div>
@@ -202,14 +208,14 @@ html,body{width:100%;height:100%;background:#000;color:#fff;font-family:'Cormora
     </div>
   </div>
 </div>
- 
+
 <script>
 // CURSOR
 const cur=document.getElementById('cur'),curR=document.getElementById('curR');
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
 (function aC(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(aC);})();
- 
+
 // BG
 const nebC=document.getElementById('bg-nebula'),nebX=nebC.getContext('2d');
 function resNeb(){nebC.width=window.innerWidth;nebC.height=window.innerHeight;nebX.clearRect(0,0,nebC.width,nebC.height);[{x:.15,y:.3,r:nebC.width*.35,c:'rgba(40,40,80,.07)'},{x:.85,y:.7,r:nebC.width*.3,c:'rgba(30,20,60,.05)'}].forEach(b=>{const g=nebX.createRadialGradient(b.x*nebC.width,b.y*nebC.height,0,b.x*nebC.width,b.y*nebC.height,b.r);g.addColorStop(0,b.c);g.addColorStop(1,'transparent');nebX.fillStyle=g;nebX.fillRect(0,0,nebC.width,nebC.height);});}
@@ -224,7 +230,7 @@ const snowC=document.getElementById('snow-c'),snowX=snowC.getContext('2d');
 let SW,sH;function resS(){SW=snowC.width=window.innerWidth;sH=snowC.height=window.innerHeight;}resS();window.addEventListener('resize',resS);
 const SNOW=Array.from({length:90},()=>({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,r:Math.random()*1.6+.3,op:Math.random()*.25+.04,sp:Math.random()*.35+.08,dr:Math.random()*.5-.25,tw:Math.random()*Math.PI*2,tws:Math.random()*.008+.002,wx:0}));
 (function aSn(){snowX.clearRect(0,0,SW,sH);SNOW.forEach(p=>{p.y+=p.sp;p.x+=p.dr+p.wx;p.tw+=p.tws;p.wx=Math.sin(p.tw)*.28;if(p.y>sH+5){p.y=-5;p.x=Math.random()*SW;}if(p.x<-5)p.x=SW+5;if(p.x>SW+5)p.x=-5;snowX.beginPath();snowX.arc(p.x,p.y,p.r,0,Math.PI*2);snowX.fillStyle=`rgba(255,255,255,${p.op*(0.6+0.4*Math.sin(p.tw))})`;snowX.fill();});requestAnimationFrame(aSn);})();
- 
+
 // TABS
 function switchTab(tab, btn){
   document.querySelectorAll('.f-tab').forEach(t=>t.classList.remove('act'));
@@ -234,8 +240,27 @@ function switchTab(tab, btn){
   document.getElementById('f-success').style.display='none';
   document.getElementById('login-error').classList.remove('show');
   document.getElementById('signup-error').classList.remove('show');
+  // Clear fields on tab switch
+  document.getElementById('login-email').value='';
+  document.getElementById('login-password').value='';
+  document.getElementById('signup-name').value='';
+  document.getElementById('signup-email').value='';
+  document.getElementById('signup-password').value='';
 }
- 
+
+// EYE TOGGLE
+function toggleEye(inputId, btnId){
+  const inp = document.getElementById(inputId);
+  const btn = document.getElementById(btnId);
+  if(inp.type === 'password'){
+    inp.type = 'text';
+    btn.style.color = 'rgba(255,255,255,.9)';
+  } else {
+    inp.type = 'password';
+    btn.style.color = 'rgba(255,255,255,.4)';
+  }
+}
+
 // PASSWORD STRENGTH
 function checkPW(v){
   const bars=[document.getElementById('pb1'),document.getElementById('pb2'),document.getElementById('pb3'),document.getElementById('pb4')];
@@ -249,21 +274,24 @@ function checkPW(v){
   const cls=score<=1?'weak':score<=2?'med':'strong';
   for(let i=0;i<score;i++)bars[i].classList.add(cls);
 }
- 
+
 // SHOW SUCCESS & REDIRECT
 function showSuccess(){
   document.querySelectorAll('.f-panel').forEach(p=>p.style.display='none');
   document.getElementById('f-success').style.display='block';
   setTimeout(()=>{ window.location.href='/chat'; }, 1800);
 }
- 
+
 // SHOW ERROR
 function showError(id, msg){
   const el = document.getElementById(id);
   el.textContent = msg;
+  el.style.color = '#ff6b6b';
+  el.style.borderColor = 'rgba(255,80,80,.2)';
+  el.style.background = 'rgba(255,80,80,.08)';
   el.classList.add('show');
 }
- 
+
 // ✅ REAL LOGIN
 async function handleLogin(){
   const email = document.getElementById('login-email').value.trim();
@@ -271,26 +299,31 @@ async function handleLogin(){
   const btn = document.getElementById('login-btn');
   const errEl = document.getElementById('login-error');
   errEl.classList.remove('show');
- 
-  if(!email || !password){ showError('login-error','Email aur password dono bharo!'); return; }
- 
+
+  if(!email || !password){ showError('login-error','Please enter both email and password.'); return; }
+
   btn.textContent = 'AUTHENTICATING...';
   btn.style.opacity = '.7';
   btn.disabled = true;
- 
+
   const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
- 
+
   if(error){
     btn.textContent = 'SIGN IN →';
     btn.style.opacity = '1';
     btn.disabled = false;
-    showError('login-error', error.message === 'Invalid login credentials' ? 'Galat email ya password!' : error.message);
+    const msg = error.message.includes('Invalid login credentials')
+      ? 'Incorrect email or password. Please try again.'
+      : error.message.includes('Email not confirmed')
+      ? 'Please verify your email address first.'
+      : 'Sign in failed. Please check your credentials.';
+    showError('login-error', msg);
     return;
   }
- 
+
   showSuccess();
 }
- 
+
 // ✅ REAL SIGNUP
 async function handleSignup(){
   const name = document.getElementById('signup-name').value.trim();
@@ -298,51 +331,59 @@ async function handleSignup(){
   const password = document.getElementById('signup-password').value;
   const btn = document.getElementById('signup-btn');
   document.getElementById('signup-error').classList.remove('show');
- 
-  if(!name || !email || !password){ showError('signup-error','Saari fields bharo!'); return; }
-  if(password.length < 6){ showError('signup-error','Password kam se kam 6 characters ka hona chahiye!'); return; }
- 
+
+  if(!name || !email || !password){ showError('signup-error','Please fill in all fields.'); return; }
+  if(password.length < 6){ showError('signup-error','Password must be at least 6 characters.'); return; }
+  if(!/\S+@\S+\.\S+/.test(email)){ showError('signup-error','Please enter a valid email address.'); return; }
+
   btn.textContent = 'CREATING ACCOUNT...';
   btn.style.opacity = '.7';
   btn.disabled = true;
- 
+
   const { data, error } = await _supabase.auth.signUp({
     email, password,
     options: { data: { full_name: name } }
   });
- 
+
   if(error){
     btn.textContent = 'CREATE ACCOUNT →';
     btn.style.opacity = '1';
     btn.disabled = false;
-    showError('signup-error', error.message);
+    const msg = error.message.includes('already registered')
+      ? 'This email is already registered. Please sign in instead.'
+      : error.message.includes('Password')
+      ? 'Password is too weak. Please use a stronger password.'
+      : 'Account creation failed. Please try again.';
+    showError('signup-error', msg);
     return;
   }
- 
+
   showSuccess();
 }
- 
+
 // ✅ GOOGLE LOGIN
 async function handleGoogle(){
   const { error } = await _supabase.auth.signInWithOAuth({
     provider: 'google',
     options: { redirectTo: window.location.origin + '/chat' }
   });
-  if(error) alert('Google login mein error: ' + error.message);
+  if(error) showError('login-error', 'Google sign in failed. Please try again.');
 }
- 
+
 // FORGOT PASSWORD
 async function handleForgot(){
   const email = document.getElementById('login-email').value.trim();
-  if(!email){ showError('login-error','Pehle apna email daalo, phir "Forgot password" click karo!'); return; }
+  if(!email){ showError('login-error','Please enter your email address first, then click Forgot Password.'); return; }
   const { error } = await _supabase.auth.resetPasswordForEmail(email);
-  if(error){ showError('login-error', error.message); return; }
-  showError('login-error','Password reset email bhej diya! Check karo inbox.');
-  document.getElementById('login-error').style.color='#39d98a';
-  document.getElementById('login-error').style.borderColor='rgba(57,217,138,.3)';
-  document.getElementById('login-error').style.background='rgba(57,217,138,.05)';
+  if(error){ showError('login-error', 'Could not send reset email. Please try again.'); return; }
+  const el = document.getElementById('login-error');
+  el.textContent = 'Password reset email sent! Check your inbox.';
+  el.style.color = '#39d98a';
+  el.style.borderColor = 'rgba(57,217,138,.3)';
+  el.style.background = 'rgba(57,217,138,.05)';
+  el.classList.add('show');
 }
- 
+
 // ENTER KEY
 document.addEventListener('keydown',e=>{
   if(e.key==='Enter'){
@@ -351,12 +392,17 @@ document.addEventListener('keydown',e=>{
     else if(active&&active.id==='panel-signup') handleSignup();
   }
 });
- 
-// AUTO REDIRECT if already logged in
-(async()=>{
+
+// CLEAR FIELDS ON LOAD & AUTO REDIRECT if already logged in
+window.addEventListener('load', async ()=>{
+  // Clear all fields
+  document.getElementById('login-email').value='';
+  document.getElementById('login-password').value='';
+
+  // Auto redirect if already logged in
   const { data: { session } } = await _supabase.auth.getSession();
   if(session) window.location.href = '/chat';
-})();
+});
 </script>
 </body>
 </html>
