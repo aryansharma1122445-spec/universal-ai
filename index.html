@@ -783,18 +783,20 @@ footer{
         <ellipse cx="70" cy="70" rx="58" ry="18" fill="none" stroke="rgba(180,140,255,0.5)" stroke-width="1.2" transform="rotate(60 70 70)"/>
         <!-- Orbit 3 - 120deg -->
         <ellipse cx="70" cy="70" rx="58" ry="18" fill="none" stroke="rgba(100,220,180,0.5)" stroke-width="1.2" transform="rotate(120 70 70)"/>
-        <!-- Electron 1 - orbit 1 horizontal -->
-        <g style="transform-origin:70px 70px;animation:orbit1 6s linear infinite">
-          <circle cx="128" cy="70" r="5" fill="rgba(100,180,255,0.95)"/>
-        </g>
-        <!-- Electron 2 - orbit 2 tilted 60deg -->
-        <g transform="rotate(60 70 70)" style="transform-origin:70px 70px;animation:orbit2 8s linear infinite">
-          <circle cx="128" cy="70" r="5" fill="rgba(180,140,255,0.95)"/>
-        </g>
-        <!-- Electron 3 - orbit 3 tilted 120deg -->
-        <g transform="rotate(120 70 70)" style="transform-origin:70px 70px;animation:orbit3 5s linear infinite">
-          <circle cx="128" cy="70" r="5" fill="rgba(100,220,180,0.95)"/>
-        </g>
+        <defs>
+          <path id="op1" d="M 128,70 A 58,18 0 1,0 12,70 A 58,18 0 1,0 128,70"/>
+          <path id="op2" d="M 99,120.2 A 58,18 60 1,0 41,19.8 A 58,18 60 1,0 99,120.2"/>
+          <path id="op3" d="M 41,120.2 A 58,18 120 1,0 99,19.8 A 58,18 120 1,0 41,120.2"/>
+        </defs>
+        <circle r="4" fill="rgba(100,180,255,0.95)">
+          <animateMotion dur="6s" repeatCount="indefinite"><mpath href="#op1"/></animateMotion>
+        </circle>
+        <circle r="4" fill="rgba(180,140,255,0.95)">
+          <animateMotion dur="9s" repeatCount="indefinite"><mpath href="#op2"/></animateMotion>
+        </circle>
+        <circle r="4" fill="rgba(100,220,180,0.95)">
+          <animateMotion dur="7s" repeatCount="indefinite"><mpath href="#op3"/></animateMotion>
+        </circle>
         <!-- Nucleus glow -->
         <circle cx="70" cy="70" r="18" fill="rgba(80,140,255,0.1)"/>
         <!-- Nucleus -->
