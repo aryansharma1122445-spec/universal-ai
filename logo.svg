@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#000000"/>
+  <defs>
+    <radialGradient id="qcore" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#88ccff" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#4488ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="qglow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#4488ff" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#4488ff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Glow -->
+  <circle cx="256" cy="256" r="160" fill="url(#qglow)"/>
+  <!-- Orbit 1 horizontal -->
+  <ellipse cx="256" cy="256" rx="150" ry="45" fill="none" stroke="rgba(100,180,255,0.6)" stroke-width="2"/>
+  <!-- Orbit 2 tilted 60 -->
+  <ellipse cx="256" cy="256" rx="150" ry="45" fill="none" stroke="rgba(180,140,255,0.6)" stroke-width="2" transform="rotate(60 256 256)"/>
+  <!-- Orbit 3 tilted 120 -->
+  <ellipse cx="256" cy="256" rx="150" ry="45" fill="none" stroke="rgba(100,220,180,0.6)" stroke-width="2" transform="rotate(120 256 256)"/>
+  <!-- Electrons -->
+  <circle cx="406" cy="256" r="8" fill="rgba(100,180,255,0.95)"/>
+  <circle cx="106" cy="256" r="5" fill="rgba(100,180,255,0.4)"/>
+  <circle cx="181" cy="169" r="8" fill="rgba(180,140,255,0.95)"/>
+  <circle cx="331" cy="343" r="5" fill="rgba(180,140,255,0.4)"/>
+  <circle cx="181" cy="343" r="8" fill="rgba(100,220,180,0.95)"/>
+  <circle cx="331" cy="169" r="5" fill="rgba(100,220,180,0.4)"/>
+  <!-- Nucleus glow -->
+  <circle cx="256" cy="256" r="42" fill="rgba(80,140,255,0.1)"/>
+  <circle cx="256" cy="256" r="28" fill="rgba(80,140,255,0.15)"/>
+  <!-- Nucleus -->
+  <circle cx="256" cy="256" r="18" fill="#050510" stroke="rgba(180,210,255,0.95)" stroke-width="2.5"/>
+  <circle cx="256" cy="256" r="10" fill="url(#qcore)"/>
+  <circle cx="256" cy="256" r="4" fill="#ffffff"/>
+  <!-- Inner protons -->
+  <circle cx="252" cy="253" r="2.5" fill="rgba(120,180,255,0.8)"/>
+  <circle cx="260" cy="259" r="2.5" fill="rgba(180,140,255,0.8)"/>
+  <circle cx="259" cy="251" r="2" fill="rgba(100,220,180,0.8)"/>
+</svg>
